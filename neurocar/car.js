@@ -20,7 +20,7 @@ function Car() {
   this.distanceToWallsPixels = []; //for display purpose
 
   //new neural network with 5 inputs, 6 neurones and 2 outputs (steering and acceleration)
-  this.NN = new NN([3,6,2]);
+  this.NN = new NN([3,5,2]);
 }
 
 Car.prototype.pork = function(father,mother) {
