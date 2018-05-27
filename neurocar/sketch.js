@@ -1,11 +1,19 @@
 var cars = [];
 var track;
 
+var speedSelect;
+
 var started = false;
 var startDate;
 var endDate;
 var frameNum = 0;
 
+var mapSpeed = {
+  'X1':1,
+  'X2':2,
+  'X4':4,
+  'X8':8,
+};
 
 let raceOngoing = false;
 let bestFitness = 0;
@@ -23,6 +31,15 @@ var mutationRate = 0.05; //number of genes we mutate
 
 var stats = [];
 function setup() {
+
+  speedSelect = createSelect();
+  speedSelect.position(1000, 5);
+  speedSelect.option('X1');
+  speedSelect.option('X2');
+  speedSelect.option('X4');
+  speedSelect.option('X8');
+
+
   angleMode(RADIANS);
   createCanvas(1200,800);
   console.log('pixelDenstity:'+pixelDensity());
@@ -81,29 +98,36 @@ function draw() {
   bestSteering = 0;
   remainingCars = 0;
 
-  for(var i=nbCars-1;i>=0;i--) {
-    //We calculate the direction we want to take
-    cars[i].calculateSteeringAndAccelerator();
-    //We calculate the forces that apply to the car
-    cars[i].behaviors();
-    //We update the parameters
-    cars[i].update();
-    cars[i].show();
-    //We calculate the crashing
-    if(!(cars[i].isCrashed || cars[i].isFinished)) {
 
+  for(var speed=1;speed<=mapSpeed[speedSelect.value()] ;speed++) {
+    for(var i=nbCars-1;i>=0;i--) {
+      //We calculate the direction we want to take
+      cars[i].calculateSteeringAndAccelerator();
+      //We calculate the forces that apply to the car
+      cars[i].behaviors();
+      //We update the parameters
+      cars[i].update();
       
-      let tempFitness = track.getFitnessScore(cars[i],frameNum);
-      if(!genFinish &&  cars[i].isFinished) genFinish = generationNum;
-      remainingCars++;
-      if(tempFitness > bestFitness) {
-        bestFitness = tempFitness;
-        bestAcc = cars[i].accelerator;
-        bestSteering = cars[i].steering;
+      //We calculate the crashing
+      if(!(cars[i].isCrashed || cars[i].isFinished)) {
+
+        
+        let tempFitness = track.getFitnessScore(cars[i],frameNum);
+        if(!genFinish &&  cars[i].isFinished) genFinish = generationNum;
+        remainingCars++;
+        if(tempFitness > bestFitness) {
+          bestFitness = tempFitness;
+          bestAcc = cars[i].accelerator;
+          bestSteering = cars[i].steering;
+        }
+        track.isCrashed(cars[i]);
+        raceOngoing = true;
       }
-      track.isCrashed(cars[i]);
-      raceOngoing = true;
     }
+  }
+
+  for(var i=nbCars-1;i>=0;i--) {
+    cars[i].show();
   }
   //We draw th efirst neural network
   if(!(cars[0].isCrashed || cars[0].isFinished)) cars[0].NN.show();
