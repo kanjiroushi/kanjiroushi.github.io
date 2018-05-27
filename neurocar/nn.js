@@ -123,7 +123,7 @@ NN.prototype.show = function() {
 						y);
 				}
 				//bias
-				let w = this.weights[layerNum][neuronNum][prevNeuroneNum+1];
+				let w = this.weights[layerNum][neuronNum][prevNeuroneNum];
 				if(w >= 0) stroke(30,150,30,100);
 				else stroke(150,30,30,100);
 				strokeWeight(map(Math.abs(w),0,1,1,5));
