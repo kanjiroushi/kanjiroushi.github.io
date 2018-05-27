@@ -52,6 +52,7 @@ Car.prototype.calculateSteeringAndAccelerator = function() {
   }
   let NNOutput = this.NN.processInput(this.distanceToWalls);
   this.accelerator = (NNOutput[0]+1)/2; //we expect accelerator between 0 and 1
+  if(this.accelerator < 0.3) this.accelerator = 0.3;
   this.steering = NNOutput[1];
 }
 

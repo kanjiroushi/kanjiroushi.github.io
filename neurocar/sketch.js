@@ -149,7 +149,7 @@ function draw() {
   text('mean',365,270);
   text('max',465,270);
   textStyle(NORMAL);
-  for(var i = 1;i <=12;i++ ) {
+  for(var i = 1;i <=17;i++ ) {
     pos = stats.length - i;
     if(pos >=0) {
       text(pos+1,320,270 + i *20);
@@ -193,10 +193,23 @@ function draw() {
     for (var i=0; i < store.length; i++) {
       cars.push( store[i] );
     }
-//console.log('king and queen pork');
-    //We make them pork
+
     //only parent can pork
     whoPork = floor(cars.length/2);
+
+
+    //king pork 3 times
+    var arr = []
+    while(arr.length < 2){
+        var randomnumber = Math.floor(Math.random()*whoPork)+1;
+        if(arr.indexOf(randomnumber) > -1) continue;
+        arr[arr.length] = randomnumber;
+    }
+    for(var i=0;i < arr.length;i++) {
+      car.pork(cars[0],cars[arr[i]]);
+      cars.push(car);
+    }
+    
     while(cars.length != nbCars) {
       car = new Car();
       //We select 2 parents in the existing cars

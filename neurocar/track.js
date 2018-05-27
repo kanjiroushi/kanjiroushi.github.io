@@ -8,7 +8,7 @@ function Track() {
 		createVector(50, 600),
 		createVector(130, 700),
 		createVector(200, 700),
-		createVector(400, 700),
+		createVector(400, 650),
 		createVector(700, 700),
 		createVector(650, 400),
 		createVector(750, 50),
