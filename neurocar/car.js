@@ -47,7 +47,8 @@ Car.prototype.calculateSteeringAndAccelerator = function() {
         break;
       }
     }
-    this.distanceToWalls[i] = map(u, 1, visibilitySteps+1, 0, 1);
+    if(u >= visibilitySteps) this.distanceToWallsPixels[i] = createVector(-50, -50);
+    this.distanceToWalls[i] = map(u, 1, visibilitySteps+1, -1, 1);
   }
   let NNOutput = this.NN.processInput(this.distanceToWalls);
   this.accelerator = (NNOutput[0]+1)/2; //we expect accelerator between 0 and 1

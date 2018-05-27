@@ -24,7 +24,7 @@ var mutationRate = 0.05; //number of genes we mutate
 var stats = [];
 function setup() {
   angleMode(RADIANS);
-  createCanvas(800,800);
+  createCanvas(1200,800);
   console.log('pixelDenstity:'+pixelDensity());
   pixelDensity(1);
   //We create the track to get the pixels
@@ -105,6 +105,8 @@ function draw() {
       raceOngoing = true;
     }
   }
+  //We draw th efirst neural network
+  if(!(cars[0].isCrashed || cars[0].isFinished)) cars[0].NN.show();
 
   //We check if the race is over
 
@@ -128,35 +130,31 @@ function draw() {
   textSize(32);
   fill(0);
   stroke(255);
-  text('frame: '+frameNum,310,150);
-  text('generation: '+generationNum,310,180);
-  text('fitness: '+ format(bestFitness),310,210);
+  text('frame: '+frameNum,310,120);
+  text('generation: '+generationNum,310,150);
 
 
-  text('acc: ' + format(bestAcc),310,240);
-  text('steering: '+ format(bestSteering),310,270);
-
-  text('framerate: '+parseInt(frameRate()),310,300);
-  text('nb remains: '+remainingCars,310,330);
+  text('framerate: '+parseInt(frameRate()),310,180);
+  text('nb remains: '+remainingCars,310,210);
 
   if(genFinish) {
     fill('#EFD807');
-    text('gen finish: '+genFinish,310,360);
+    text('gen finish: '+genFinish,310,240);
     fill(0);
   }
 
   textSize(20);
   textStyle(BOLD);
-  text('gen',312,380);
-  text('mean',365,380);
-  text('max',465,380);
+  text('gen',312,270);
+  text('mean',365,270);
+  text('max',465,270);
   textStyle(NORMAL);
-  for(var i = 1;i <=14;i++ ) {
+  for(var i = 1;i <=12;i++ ) {
     pos = stats.length - i;
     if(pos >=0) {
-      text(pos+1,320,380 + i *20);
-      text(format(stats[pos].mean),360,380 + i *20);
-      text(format(stats[pos].max),450,380 + i *20);
+      text(pos+1,320,270 + i *20);
+      text(format(stats[pos].mean),360,270 + i *20);
+      text(format(stats[pos].max),450,270 + i *20);
     }
   }
 
