@@ -196,19 +196,6 @@ function draw() {
 
     //only parent can pork
     whoPork = floor(cars.length/2);
-
-
-    //king pork 3 times
-    var arr = []
-    while(arr.length < 2){
-        var randomnumber = Math.floor(Math.random()*whoPork)+1;
-        if(arr.indexOf(randomnumber) > -1) continue;
-        arr[arr.length] = randomnumber;
-    }
-    for(var i=0;i < arr.length;i++) {
-      car.pork(cars[0],cars[arr[i]]);
-      cars.push(car);
-    }
     
     while(cars.length != nbCars) {
       car = new Car();
