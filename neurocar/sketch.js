@@ -16,9 +16,7 @@ var mapSpeed = {
 };
 
 let raceOngoing = false;
-let bestFitness = 0;
-let bestAcc = 0;
-let bestSteering = 0;
+
 let remainingCars = 0;
 
 let bestUId = '';
@@ -93,13 +91,12 @@ function draw() {
   track.draw();
 
   raceOngoing = false;
-  bestFitness = 0;
-  bestAcc = 0;
-  bestSteering = 0;
+
   remainingCars = 0;
 
 
   for(var speed=1;speed<=mapSpeed[speedSelect.value()] ;speed++) {
+    remainingCars = 0;
     for(var i=nbCars-1;i>=0;i--) {
       //We calculate the direction we want to take
       cars[i].calculateSteeringAndAccelerator();
@@ -115,11 +112,6 @@ function draw() {
         let tempFitness = track.getFitnessScore(cars[i],frameNum);
         if(!genFinish &&  cars[i].isFinished) genFinish = generationNum;
         remainingCars++;
-        if(tempFitness > bestFitness) {
-          bestFitness = tempFitness;
-          bestAcc = cars[i].accelerator;
-          bestSteering = cars[i].steering;
-        }
         track.isCrashed(cars[i]);
         raceOngoing = true;
       }
