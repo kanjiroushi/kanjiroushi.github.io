@@ -87,7 +87,7 @@ function draw() {
 
   background(255);
 
-  frameNum++;
+  
   track.draw();
 
   raceOngoing = false;
@@ -96,6 +96,7 @@ function draw() {
 
 
   for(var speed=1;speed<=mapSpeed[speedSelect.value()] ;speed++) {
+    frameNum++;
     remainingCars = 0;
     for(var i=nbCars-1;i>=0;i--) {
       //We calculate the direction we want to take
