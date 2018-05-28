@@ -203,9 +203,6 @@ function draw() {
     //We kill the slow ones
     cars.splice(nbCars/2,nbCars);
 
-    car = new Car();
-    car.pork(cars[0],cars[1]);
-    cars.push(car);
 
     for (var i=0; i < store.length; i++) {
       cars.push( store[i] );
