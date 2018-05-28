@@ -18,13 +18,13 @@ function Car() {
   this.isFinished = false;
   this.distanceToWalls = [];
   this.distanceToWallsPixels = []; //for display purpose
-
-  //new neural network with 5 inputs, 6 neurones and 2 outputs (steering and acceleration)
-  this.NN = new NN([3,5,2]);
+  this.currentSegment = 0; //avoid going backward if user creates a loop
+  //new neural network, first number must be number of capteurs and last must be 2, acc and steering
+  this.NN = new NN([3,10,2]);
 }
 
-Car.prototype.pork = function(father,mother) {
-  this.NN.pork(Object.assign(father.NN),Object.assign(mother.NN));
+Car.prototype.crossFit = function(father,mother) {
+  this.NN.crossFit(Object.assign(father.NN),Object.assign(mother.NN));
 }
 Car.prototype.mutate = function() {
   this.NN.mutate();
@@ -157,62 +157,4 @@ Car.prototype.applySteeringAndAcc = function() {
   //The acceleration tells us if we accelerate or decelerate
   force.mult(this.accelerator/10);
   return force;
-}
-
-
-
-
-Car.prototype.arrive = function(target) {
-  var desired = p5.Vector.sub(target, this.pos);
-  var d = desired.mag();
-  var speed = this.maxspeed;
-  if (d < 50) {
-    speed = map(d, 0, 100, 0, this.maxspeed);
-  }
-  desired.setMag(speed);
-  var steer = p5.Vector.sub(desired, this.vel);
-  steer.limit(this.maxforce);
-  return steer;
-}
-
-Car.prototype.flee = function(target) {
-  var desired = p5.Vector.sub(target, this.pos);
-  var d = desired.mag();
-  if (d < 50) {
-    desired.setMag(this.maxspeed);
-    desired.mult(-1);
-    var steer = p5.Vector.sub(desired, this.vel);
-    steer.limit(this.maxforce);
-    return steer;
-  } else {
-    return createVector(0, 0);
-  }
-}
-
-Car.prototype.separate = function(vehicles) {
-  let desiredSeparation = this.r * 3;
-  let sum = createVector(0, 0);
-  let count = 0;
-
-  for(var i =0;i< vehicles.length;i++) {
-    let other = vehicles[i];
-    d = this.pos.dist(other.pos);
-    if(d > 0 && d < desiredSeparation) {
-      diff = p5.Vector.sub(this.pos,other.pos);
-      diff.normalize(); //we want the vector to be length 1, because it is the distance that set the force
-      diff.div(d); //the closer the other, the bigger the vector
-      sum.add(diff);
-      count++;
-    }
-  }
-  //Now we have all the vactors sumed up
-  if(count > 0) {
-    var steer = p5.Vector.sub(sum, this.vel);
-    steer.normalize().mag(this.maxforce);
-    return steer;
-  } else {
-    return createVector(0, 0);
-  }
-
-
 }

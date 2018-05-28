@@ -1,7 +1,7 @@
-let nnStartX = 800;
+let nnStartX = 820;
 let nnStartY = 0;
 let nnHeight = 400;
-let nnWidth = 400;
+let nnWidth = 380;
 
 
 function NN(layers) {
@@ -28,7 +28,7 @@ function NN(layers) {
 	}
 }
 
-NN.prototype.pork = function (fatherNN,motherNN) {
+NN.prototype.crossFit = function (fatherNN,motherNN) {
 	let previousNbNeurons = this.layers[0];
 	for(var layerNum = 1;layerNum < this.layers.length;layerNum++) {
 		//We instantiate the layer
@@ -153,8 +153,8 @@ NN.prototype.show = function() {
 	text('steering', this.neuronesPos[layerNum-1][1].x+22,this.neuronesPos[layerNum-1][1].y+3);
 
 	text('dist left', this.neuronesPos[0][0].x-40,this.neuronesPos[0][0].y+5);
-	text('dist front', this.neuronesPos[0][1].x-50,this.neuronesPos[0][1].y+5);
-	text('dist right', this.neuronesPos[0][2].x-50,this.neuronesPos[0][2].y+5);
+	text('dist front', this.neuronesPos[0][1].x-50,this.neuronesPos[0][Math.floor(this.neuronesPos[0].length/2)].y+5);
+	text('dist right', this.neuronesPos[0][2].x-50,this.neuronesPos[0][this.neuronesPos[0].length-1].y+5);
 	stroke(80);
 }
 //////////////

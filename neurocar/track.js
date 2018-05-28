@@ -1,20 +1,10 @@
 let trackWidth = 70;
 
-function Track() {
-	this.vectors = [
-		createVector(50, 50),
-		createVector(50,200),
-		createVector(150, 400),
-		createVector(50, 600),
-		createVector(130, 700),
-		createVector(200, 700),
-		createVector(400, 650),
-		createVector(700, 700),
-		createVector(650, 400),
-		createVector(750, 50),
-		createVector(150, 50),
-
-	];
+function Track(trackPoints) {
+	this.vectors = [];
+	for(var i=0;i<trackPoints.length;i++) {
+		this.vectors.push(createVector(trackPoints[i].x,trackPoints[i].y));
+	}
 	//We store the track length that is max fitness
 	var dist = 0;
 	for(var i=0;i < this.vectors.length-1;i++) {
@@ -25,6 +15,10 @@ function Track() {
 
 Track.prototype.draw = function() {
 	noFill();
+	stroke(0,0,0);
+	rectMode(CORNER);
+	strokeWeight(2);
+	rect(1,1,798,798);
 	stroke(30,30,200);
 	strokeWeight(trackWidth);
 	beginShape();
@@ -94,7 +88,16 @@ Track.prototype.getCurrentSegmentAndDistance = function(car) {
 Track.prototype.getFitnessScore = function(car,frameNum) {
 
 	let currentPos = this.getCurrentSegmentAndDistance(car);
+
 	let fitness = currentPos.fitness - frameNum / 30;
+
+	if(currentPos.segment - car.currentSegment > 1) {
+		fitness = 0;
+		currentPos.fitness = 0;
+		car.isCrashed = true;
+	} else car.currentSegment = currentPos.segment;
+
+
 	//We store the fitness in the car
 	car.fitness = fitness;
 	if(currentPos.fitness > this.trackSize - 50 ) {
