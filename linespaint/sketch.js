@@ -141,7 +141,7 @@ function setup() {
 
 
 function reloadImg() {
-  resizeCanvas(canvasWidth, canvasHeight);
+  resizeCanvas(parseInt(canvasWidth), parseInt(canvasHeight));
   loadImg();
 }
 
