@@ -4,7 +4,7 @@ let canvasWidth = 400*2;
 let canvasHeight = 268*2;
 
 //points parameters
-let minPoints = 900;
+let minPoints = 1;
 let maxPoints = 900;
 let nbPaints = 10;
 
