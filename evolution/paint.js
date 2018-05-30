@@ -3,12 +3,19 @@ function Paint() {
   this.triangles = [];
   this.fitness = 0;
   this.mutated = true;
-  for(var i = 0;i<minPoints;i++) this.genes.push(new Poi());
+  for(var i = 0;i<minPoints;i++) this.genes.push({x:floor(random(0,width)),y:floor(random(0,height))});
 }
 
 Paint.prototype.getADN = function() {
-  this.genes.sort(function(a,b) {return (a.adnNum > b.adnNum) ? 1 : -1;});
-  return this.genes.reduce((acc,o) => acc + o.getADN(),'');
+  this.genes.sort(function(a,b) {return (a.x * a.y > b.x * b.y) ? 1 : -1;});
+  return this.genes.reduce((acc,o) => acc +  o.x+'@'+o.y+'|','');
+}
+
+Paint.prototype.copyGenes = function(paint) {
+  this.genes = [];
+  for(var i=0;i<paint.genes.length;i++) {
+    this.genes.push(Object.assign(paint.genes[i]));
+  }
 }
 
 Paint.prototype.calcTriangles = function() {
@@ -30,6 +37,7 @@ Paint.prototype.calcTriangles = function() {
 
 
 Paint.prototype.show = function() {
+  if(this.mutated) this.calcTriangles();
   background(150);
   
   noStroke();
@@ -42,6 +50,7 @@ Paint.prototype.show = function() {
     colY = floor(centerY/resolution);
     sColor = sourceImgColors[colX][colY];
     fill(sColor.R,sColor.G,sColor.B);
+    if(!showPoly) stroke(sColor.R,sColor.G,sColor.B);
 
     beginShape();
     vertex(this.triangles[i].v0.x, this.triangles[i].v0.y);
@@ -110,7 +119,6 @@ Paint.prototype.crossFit = function(father,mother) {
 Paint.prototype.mutate = function() {
   for(var geneNum=0;geneNum < this.genes.length;geneNum++) {
     if(Math.random() < mutationRate) {
-      ////console.log(geneNum+' mutation');
       this.genes[geneNum].x += round(random(-20,20));
       if(this.genes[geneNum].x < 0 )this.genes[geneNum].x = 0;
       if(this.genes[geneNum].x >= width )this.genes[geneNum].x = width-1;
@@ -121,7 +129,8 @@ Paint.prototype.mutate = function() {
     }
   }
   if(Math.random() < newGeneRate && this.genes.length < maxPoints) {
-    this.genes.push(new Poi());
+
+    this.genes.push({x:floor(random(0,width)),y:floor(random(0,height))});
     this.mutated = true;
   }
 }

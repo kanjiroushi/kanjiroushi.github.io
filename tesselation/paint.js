@@ -33,7 +33,7 @@ Paint.prototype.show = function() {
     colY = floor(centerY/resolution);
     sColor = sourceImgColors[colX][colY];
     fill(sColor.R,sColor.G,sColor.B);
-
+    if(!showPoly) stroke(sColor.R,sColor.G,sColor.B);
     beginShape();
     vertex(this.triangles[i].v0.x, this.triangles[i].v0.y);
     vertex(this.triangles[i].v1.x, this.triangles[i].v1.y);

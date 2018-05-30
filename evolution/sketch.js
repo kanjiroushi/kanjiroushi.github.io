@@ -8,8 +8,10 @@ let minPoints = 1;
 let maxPoints = 900;
 let nbPaints = 10;
 
-let mutationRate = 0.10;
+let mutationRate = 0.05;
 let newGeneRate = 1;
+
+let showPoly = false;
 
 var paints = [];
 
@@ -113,24 +115,14 @@ function setup() {
 
 function draw() {
   
-
-  //wan to keep 10% of cars in the second half
-  step = floor(nbPaints/10);
-  store = [];
-  start = nbPaints/2;
-  i = 1;
-  while(i < nbPaints/2) {
-    paintNum = floor(nbPaints/2+i);
-    store.push(paints[paintNum]);
-    i += step;
-  }
- //We kill the slow ones
+ //We kill everyone but the bests
   paints.splice(nbPaints/2,nbPaints);
 
 
-  for (var i=0; i < store.length; i++) {
-    paints.push( store[i] );
-  }
+  //the best is copied so it can be mutated
+  paint = new Paint();
+  paint.copyGenes(paints[0]);
+  paints.push(paint);
 
   //only parent can crossFit
   whoCrossFit = floor(paints.length/2);
@@ -167,13 +159,13 @@ function draw() {
   for(i=1;i<nbPaints;i++) {
     paints[i].mutate();
   }
-  
+
 
   //we recalculate the triangles
   for(var i=0;i<nbPaints;i++) {
-    paints[i].calcTriangles();
     paints[i].calcFitness();
   }
+
   //the lower the better (perfect fit being 0)
   paints.sort(function(a,b) {return (a.fitness > b.fitness) ? 1 : -1;} );
   console.log(generation,paints[0].fitness,paints[0].genes.length);
@@ -187,7 +179,8 @@ function draw() {
   text(generation,10,20);
 */
   generation++;
-  /* ro record images
+  /*
+  // to record images
   //command line used
   //avconv -r 4 -f image2 -i LinePicture%03d.png  -s 800x600  -vcodec libx264 -r 24 test.mp4
 

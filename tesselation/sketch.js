@@ -5,6 +5,7 @@ let canvasHeight = 1200;
 
 //points parameters
 let points = 1000;
+let storedPoints = 1000;
 let minPoints = 0;
 let maxPoints = 5000;
 
@@ -12,6 +13,7 @@ let maxPoints = 5000;
 //buttons
 let greyScale = false;
 let sliderPoints;
+let showPoly = true;
 
 var paint;
 
@@ -112,6 +114,10 @@ function setup() {
   checkbox1 = createCheckbox('Grey scale', greyScale);
   checkbox1.changed(setGreyScale);
 
+  checkbox1 = createCheckbox('show border', showPoly);
+  checkbox1.changed(setShowPoly);
+
+
   createElement('br');
   createElement('br');
 
@@ -129,7 +135,11 @@ function setup() {
 
 
   createDiv('nb points');
-  sliderPoints = createSlider(minPoints,maxPoints,points,1);
+  var inp10 = createInput(points,'number');
+  inp10.input(changeNbPoints);
+  buttredrawPoints = createButton('Redraw');
+  buttredrawPoints.mousePressed(redrawImage);
+
 
   createElement('br');
   createElement('br');
@@ -185,15 +195,15 @@ function setGreyScale() {
   }
   loadImg();
 }
-
-
-
-function draw() {
-  if(sliderPoints.value() != points) {
-    points = sliderPoints.value();
-    paint = new Paint();
-    paint.show();
+function setShowPoly() {
+  if (this.checked()) {
+    showPoly= true;
+  } else {
+    showPoly = false;
   }
-  
+  redrawImage();
+}
 
+function changeNbPoints() {
+  points = this.value();
 }
