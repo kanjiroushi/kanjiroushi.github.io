@@ -9,7 +9,7 @@ let points = 300;
 
 //buttons
 let greyScale = false;
-let showPoly = true;
+let showPoly = false;
 
 var paint;
 
