@@ -25,20 +25,10 @@ function preload() {
 
 function loadImg() {
   background(255);
-  //We load the image pixels
-  let destWidth = canvasWidth;
-  let destHeight = canvasHeight;
-  if(img.width > img.height ) {
-    destWidth = canvasWidth;
-    destHeight = floor(img.height * canvasHeight / img.width);
-  } else {
-    destWidth = floor(img.width * canvasWidth / img.height);
-    destHeight = canvasHeight;
-  }
-
-  imgX = floor((canvasWidth - destWidth)/2);
-  imgY = floor((canvasHeight - destHeight)/2);
-  image(img,imgX ,imgY,destWidth,destHeight,0,0,img.width,img.height);
+  
+  canvasHeight =  ceil(canvasWidth * img.height / img.width);
+  c = createCanvas(canvasWidth,canvasHeight);
+  image(img,0 ,0,canvasWidth,canvasHeight,0,0,img.width,img.height);
   
   if(greyScale) filter(GRAY);
   loadPixels(); 
@@ -92,7 +82,6 @@ function loadImg() {
 
 function setup() {
   background(255);
-  c = createCanvas(canvasWidth,canvasHeight);
   pixelDensity(1);
   //We load the image
   loadImg();
@@ -115,14 +104,12 @@ function setup() {
   createElement('br');
   createElement('br');
 
-  createDiv('canvasSize');
+  createDiv('canvas Width');
   var inp1 = createInput(canvasWidth,'number');
   inp1.input(changeCanvasWidth);
-  var inp2 = createInput(canvasHeight,'number');
-  inp2.input(changeCanvasHeight);
 
   buttReload = createButton('Reload');
-  buttReload.mousePressed(reloadImg);
+  buttReload.mousePressed(loadImg);
 
   createElement('br');
   createElement('br');
@@ -169,17 +156,10 @@ function fileLoaded(file) {
     } else alert('this is not an image');
 }
 
-function reloadImg() {
-  resizeCanvas(parseInt(canvasWidth),parseInt(canvasHeight));
-  loadImg();
+function changeCanvasWidth() {
+  canvasWidth = parseInt(this.value());
 }
 
-function changeCanvasWidth() {
-  canvasWidth = this.value();
-}
-function changeCanvasHeight() {
-  canvasHeight = this.value();
-}
 
 function setGreyScale() {
   if (this.checked()) {
@@ -195,7 +175,7 @@ function setShowPoly() {
   } else {
     showPoly = false;
   }
-  redrawImage();
+  loadImg();
 }
 
 function changeNbPoints() {

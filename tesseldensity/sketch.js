@@ -26,13 +26,8 @@ function preload() {
 function loadImg() {
   background(255);
   //We load the image pixels
-  let destWidth = canvasWidth;
-  let destHeight = canvasHeight;
-
   canvasHeight =  ceil(canvasWidth * img.height / img.width);
   resizeCanvas(canvasWidth,canvasHeight);
-  
-
   image(img,0 ,0,canvasWidth,canvasHeight,0,0,img.width,img.height);
   
   if(greyScale) filter(GRAY);
