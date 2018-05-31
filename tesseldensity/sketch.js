@@ -1,7 +1,7 @@
 
 //canvas
-let canvasWidth = 3000;
-let canvasHeight = 3000;
+let canvasWidth = 1000;
+let canvasHeight = 1000;
 
 
 
@@ -14,8 +14,8 @@ let showPoly = false;
 var paint;
 
 var sourceImgColors = [];
-var maxProb = 8000 / canvasWidth / canvasHeight*100*5; //on a un max de 8000 points
-
+var maxProb = 0; //on a un max de 8000 points
+var pointBudget = 8000;
 var img;
 
 function preload() {
@@ -28,24 +28,33 @@ function loadImg() {
   //We load the image pixels
   let destWidth = canvasWidth;
   let destHeight = canvasHeight;
-  if(img.width > img.height ) {
-    destWidth = canvasWidth;
-    destHeight = floor(img.height * canvasHeight / img.width);
-  } else {
-    destWidth = floor(img.width * canvasWidth / img.height);
-    destHeight = canvasHeight;
-  }
 
-  imgX = floor((canvasWidth - destWidth)/2);
-  imgY = floor((canvasHeight - destHeight)/2);
-  image(img,imgX ,imgY,destWidth,destHeight,0,0,img.width,img.height);
+  canvasHeight =  ceil(canvasWidth * img.height / img.width);
+  resizeCanvas(canvasWidth,canvasHeight);
+  
+
+  image(img,0 ,0,canvasWidth,canvasHeight,0,0,img.width,img.height);
   
   if(greyScale) filter(GRAY);
   loadPixels(); 
 
+
+  let averageColor = 0;
+  for(var x=0;x<width;x++) {
+    for(var y=0;y<height;y++) {
+      averageColor += (pixels[(x+y*width)*4] +pixels[(x+y*width)*4+1]+pixels[(x+y*width)*4+2])/3;
+   }
+  }
+  averageColor = floor(averageColor / width / height);
+  
+  maxProb = pointBudget / canvasWidth / canvasHeight * 100 * map(averageColor,0,255,1,5);
+  console.log('average color for image '+averageColor+' and probability '+maxProb);
+
+
   //We load the initial paint
   paint = new Paint();
   paint.show();
+
 
 
 /*
@@ -91,15 +100,24 @@ function setup() {
   createElement('br');
   createElement('br');
 
-  createDiv('canvasSize');
+  createDiv('canvas Width');
   var inp1 = createInput(canvasWidth,'number');
   inp1.input(changeCanvasWidth);
-  var inp2 = createInput(canvasHeight,'number');
-  inp2.input(changeCanvasHeight);
 
   buttReload = createButton('Reload');
   buttReload.mousePressed(reloadImg);
 
+  createElement('br');
+  createElement('br');
+  createDiv('point budget');
+
+  var inp15 = createInput(pointBudget,'number');
+  inp15.input(changePointBudget);
+
+  buttReload2 = createButton('Reload');
+  buttReload2.mousePressed(reloadImg);
+
+  
 
 
   createElement('br');
@@ -137,15 +155,14 @@ function fileLoaded(file) {
 }
 
 function reloadImg() {
-  resizeCanvas(parseInt(canvasWidth),parseInt(canvasHeight));
   loadImg();
 }
 
 function changeCanvasWidth() {
-  canvasWidth = this.value();
+  canvasWidth = parseInt(this.value());
 }
-function changeCanvasHeight() {
-  canvasHeight = this.value();
+function changePointBudget() {
+  pointBudget = parseInt(this.value());
 }
 
 function setGreyScale() {

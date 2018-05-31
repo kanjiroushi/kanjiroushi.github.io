@@ -7,6 +7,13 @@ function Paint() {
 Paint.prototype.calcTriangles = function() {
   var vertices = [];
 
+    //We push the 4 corners
+  vertices.push(new delaunay.Vertex(0,0));
+  vertices.push(new delaunay.Vertex(width,0));
+  vertices.push(new delaunay.Vertex(0,height));
+  vertices.push(new delaunay.Vertex(width,height));
+
+
 
   for(var i = 0;i<this.points.length;i++) vertices.push(new delaunay.Vertex(this.points[i].x,this.points[i].y));
 
@@ -32,9 +39,13 @@ console.log('calculating points');
     }
   }
 console.log(this.points.length + ' points to display');
-if(this.points.length > 8000) {
-  console.log('too many points');
-  return;
+if(this.points.length > pointBudget) {
+  var nbPointsToRemove = this.points.length - pointBudget;
+  console.log('too many points, over budget '+ pointBudget +', removing random points '+nbPointsToRemove);
+  for(var i=0;i<nbPointsToRemove;i++) {
+    this.points.splice(floor(random(0,this.points.length)),1);
+  }
+  console.log('better: '+this.points.length);
 }
 console.log('calculating triangles');
   this.calcTriangles();
