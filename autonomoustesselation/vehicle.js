@@ -128,10 +128,10 @@ Vehicle.prototype.flee = function(target) {
 
 Vehicle.prototype.awayFromWall = function(target) {
   let vectors = [];
-  if(this.pos.x < 25) vectors.push(createVector(25,0));
-  if(this.pos.x > width - 25) vectors.push(createVector(-25,0));
-  if(this.pos.y < 25) vectors.push(createVector(0,25));
-  if(this.pos.y > height - 25) vectors.push(createVector(0,-25));
+  if(this.pos.x < 10) vectors.push(createVector(10,0));
+  if(this.pos.x > width - 10) vectors.push(createVector(-10,0));
+  if(this.pos.y < 10) vectors.push(createVector(0,10));
+  if(this.pos.y > height - 10) vectors.push(createVector(0,-10));
   
   let returnVector = createVector(0, 0);
   if(vectors.length == 0) return returnVector;
