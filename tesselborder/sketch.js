@@ -261,6 +261,6 @@ function draw() {
     fill(0);
     stroke(255);
     ellipse(mouseX,mouseY,5);
-    timeout = setTimeout(addPointRedraw,1000);
+    timeout = setTimeout(addPointRedraw,300);
   }
 }
