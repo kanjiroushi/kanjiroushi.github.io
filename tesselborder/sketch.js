@@ -224,7 +224,7 @@ function setShowPoly() {
   } else {
     showPoly = false;
   }
-  redrawImage();
+  paint.displayTriangles();
 }
 function setShowVectorMask() {
   if (this.checked()) {
