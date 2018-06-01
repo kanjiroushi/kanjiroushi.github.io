@@ -11,6 +11,7 @@ let greyScale = false;
 let showPoly = false;
 let showVectorMask = false;
 
+let timeout;
 
 var paint;
 var c;
@@ -236,4 +237,30 @@ function setShowVectorMask() {
 
 function changeNbPoints() {
   points = this.value();
+}
+
+function mouseClicked() {
+  clearTimeout(timeout);
+  paint.addPoint(mouseX,mouseY);
+  fill(0);
+  stroke(255);
+  ellipse(mouseX,mouseY,5);
+  timeout = setTimeout(addPointRedraw,1000);
+}
+function addPointRedraw() {
+  console.log('redrawing');
+  paint.calcTriangles();
+  paint.displayTriangles();
+}
+
+function draw() {
+  if (mouseIsPressed) {
+    if(random() > 0.5) return;
+    clearTimeout(timeout);
+    paint.addPoint(mouseX,mouseY);
+    fill(0);
+    stroke(255);
+    ellipse(mouseX,mouseY,5);
+    timeout = setTimeout(addPointRedraw,1000);
+  }
 }

@@ -4,6 +4,10 @@ function Paint() {
 }
 
 
+Paint.prototype.addPoint = function(x,y) {
+  this.points.push({x:x,y:y});
+}
+
 Paint.prototype.calcTriangles = function() {
   var vertices = [];
 
@@ -26,6 +30,17 @@ Paint.prototype.show = function() {
 
 console.log('calculating points');
   //Need to calculate the points per square
+  this.calculePointsFromMap();
+console.log('calculating triangles');
+  this.calcTriangles();
+console.log(this.triangles.length + ' triangles'); 
+
+console.log('displaying the triangles'); 
+  this.displayTriangles();
+}
+
+Paint.prototype.calculePointsFromMap = function() {
+  this.points = [];
   for(var x =0;x < width;x++) {
     for(var y =0;y < height;y++) {
       sColor = {R:0,G:0,B:0};
@@ -39,20 +54,18 @@ console.log('calculating points');
       }
     }
   }
-console.log(this.points.length + ' points to display');
-if(this.points.length > pointBudget) {
-  var nbPointsToRemove = this.points.length - pointBudget;
-  console.log('too many points, over budget '+ pointBudget +', removing random points '+nbPointsToRemove);
-  for(var i=0;i<nbPointsToRemove;i++) {
-    this.points.splice(floor(random(0,this.points.length)),1);
+  console.log(this.points.length + ' points to display');
+  if(this.points.length > pointBudget) {
+    var nbPointsToRemove = this.points.length - pointBudget;
+    console.log('too many points, over budget '+ pointBudget +', removing random points '+nbPointsToRemove);
+    for(var i=0;i<nbPointsToRemove;i++) {
+      this.points.splice(floor(random(0,this.points.length)),1);
+    }
+    console.log('better: '+this.points.length);
   }
-  console.log('better: '+this.points.length);
 }
-console.log('calculating triangles');
-  this.calcTriangles();
-console.log(this.triangles.length + ' triangles'); 
 
-console.log('displaying the triangles'); 
+Paint.prototype.displayTriangles = function() {
   noFill();
   for(var i =0;i < this.triangles.length;i++) {
 
