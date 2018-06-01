@@ -52,6 +52,19 @@ function loadImg() {
   if(greyScale) filter(GRAY);
   loadPixels(); 
 
+  //If the alpha is 0, we put it white
+  for(var x=0;x<width;x++) {
+    for(var y=0;y<height;y++) {
+      if(pixels[(x+y*width)*4 + 3] == 0) {
+        pixels[(x+y*width)*4] = 255;
+        pixels[(x+y*width)*4+1] = 255;
+        pixels[(x+y*width)*4+2] = 255;
+        pixels[(x+y*width)*4+3] = 255;
+      }
+    }
+  }
+  updatePixels();
+
 
 
   var imageDataCopyBis = new ImageData(pixels, width, height);
