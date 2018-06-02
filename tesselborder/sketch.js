@@ -143,7 +143,7 @@ function setup() {
   createElement('h2','Paramètres');
 
 
-  createElement('h3','Fichier');
+  createElement('h3','File');
   createFileInput(fileLoaded);
   createElement('br');
   createElement('div','Or image URL');
