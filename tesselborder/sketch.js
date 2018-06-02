@@ -16,6 +16,7 @@ let timeout;
 var paint;
 var c;
 
+let imgURL = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Tsunami_by_hokusai_19th_century.jpg';
 
 var sourceImgColors = [];
 var maxProb = 2; //on a un max de 8000 points
@@ -29,7 +30,7 @@ var tesselPixels = [];
 
 
 function preload() {
-  img = loadImage('https://upload.wikimedia.org/wikipedia/commons/a/a5/Tsunami_by_hokusai_19th_century.jpg');
+  img = loadImage(imgURL);
 }
 
 
@@ -63,8 +64,9 @@ function loadImg() {
       }
     }
   }
+  //We pixelate a bit
+  //LenaJS.pixelate(pixels,3);
   updatePixels();
-
 
 
   var imageDataCopyBis = new ImageData(pixels, width, height);
@@ -138,9 +140,18 @@ function setup() {
   loadImg();
 
 
-  createElement('h3','Paramètres');
+  createElement('h2','Paramètres');
 
+
+  createElement('h3','Fichier');
   createFileInput(fileLoaded);
+  createElement('br');
+  createElement('div','Or image URL');
+  var inp35 = createInput(imgURL,'text');
+  inp35.input(changeImgURL);
+  buttLoadURL = createButton('Load URL');
+  buttLoadURL.mousePressed(loadURL);
+
 
   createElement('br');
   createElement('br');
@@ -214,6 +225,17 @@ function fileLoaded(file) {
 
 function reloadImg() {
   loadImg();
+}
+
+function loadURL() {
+  img = loadImage(imgURL, function() {
+    loadImg();
+  }, function() {
+    alert('Issue loading image');
+  });
+}
+function changeImgURL() {
+  imgURL = this.value();
 }
 
 function changeCanvasWidth() {
