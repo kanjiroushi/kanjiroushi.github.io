@@ -184,7 +184,7 @@ function Erase() {
   background(255);
 }
 function saveImage() {
-  saveCanvas(c, 'LinePicture', 'png');
+  saveCanvas(c, 'LinesPaint', 'png');
 }
 
 function fileLoaded(file) {

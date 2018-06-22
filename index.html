@@ -1,49 +1,43 @@
+<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
+	<title>Kanjiroushi Experiences</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
 </head>
 <body>
-<h1>P5 experiences</h1>
+	<h1>Kanjiroushi experiences</h1>
 
+	<ul class="experiences">
 
-<h2>Linepicture</h2>
-<p>This experience load a picture and draw it with a sinusoid starting from the center and turning outward, the height and number of sinusoid based on brightness of the pixels behind.</p>
-<p><a href="https://kanjiroushi.github.io/linepicture/">Go to experience</a></p>
+		<li id="linepicture">
+			<div class="picture"></div>
+			<h2>Linepicture</h2>
+			<p>This experience load a picture and draw it with a sinusoid starting from the center and turning outward, the height and number of sinusoid based on brightness of the pixels behind.</p>
+			<a href="https://kanjiroushi.github.io/linepicture/">Go to experience</a>
+		</li>
 
+		<li id="linespaint">
+			<div class="picture"></div>
+			<h2>Linespaint</h2>
+			<p>This experience load a picture and draw over it with random vectors defined by the user, color of the vector being the average color behind the vector</p>
+			<a href="https://kanjiroushi.github.io/linespaint/">Go to experience</a>
+		</li>
 
-<h2>Linespaint</h2>
-<p>This experience load a picture and draw over it with random vectors defined by the user, color of the vector being the average color behind the vector</p>
-<p><a href="https://kanjiroushi.github.io/linespaint/">Go to experience</a></p>
+		<li id="neurocar">
+			<div class="picture"></div>
+			<h2>Neurocar</h2>
+			<p>cars using a neural network using genetic algorithm for evolution tries to find their way to the end, usually takes around 70 generations to finish</p>
+			<a href="https://kanjiroushi.github.io/neurocar/">Go to experience</a>
+		</li>
 
-
-<h2>Neurocar</h2>
-<p>cars using a neural network using genetic algorithm for evolution tries to find their way to the end, usually takes around 70 generations to finish</p>
-<p><a href="https://kanjiroushi.github.io/neurocar/">Go to experience</a></p>
-
-
-<h2>Evolution</h2>
-<p>evolution of the great wave of kanagawa using tesselation and genetic algorithm.
-<br />
-<iframe width="560" height="315" src="https://www.youtube.com/embed/DAPxyx0DY7E?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-</p>
-<p><a href="https://kanjiroushi.github.io/evolution/">Go to experience</a></p>
-
-
-<h2>Tesselation</h2>
-<p>Based on previous experience where I am a bit disapointed by the result of the genetic algorithm, I went with a simpler version where user can upload their images and decide the number of points</p>
-<p><a href="https://kanjiroushi.github.io/tesselation/">Go to experience</a></p>
-
-
-<h2>Autonomous Tesselation</h2>
-<p>Based on previous experience I asked myself what would happen if the triangles where on top of autonomous agents with a few rules (flee the mouse, move away from other points and stay away from the walls). You can click to add triangles.</p>
-<p><a href="https://kanjiroushi.github.io/autonomoustesselation/">Go to experience</a></p>
-
-<h2>Tessel density</h2>
-<p>I was not happy with the tesselation genetic algorithm that was converging and decided to go the old way and decide by myself where you need polygons. In this experience, I scan each pixel of the image and decide the probability to show a triangle based on the "darkness" of the pixel. You can test with your own images</p>
-<p><a href="https://kanjiroushi.github.io/tesseldensity/">Go to experience</a></p>
-
-<h2>Tessel border</h2>
-<p>Continuing my quest to get the tessel where they should be, a friend told me it is not because it is blacker that it should need more tessels, it is more the rapid variation of color that requires more tessels, so I went for an edge detector and used <a href="https://fellipe.com/demos/lena-js/">Lena.js</a> that I adapted for my purpose (a new pixelate function)</p>
-<p><a href="https://kanjiroushi.github.io/tesselborder/">Go to experience</a></p>
-
+		<li id="tesselborder">
+			<div class="picture"></div>
+			<h2>Tessel border</h2>
+			<p>Continuing my quest to get the tessel where they should be, a friend told me it is not because it is blacker that it should need more tessels, it is more the rapid variation of color that requires more tessels, so I went for an edge detector and used <a href="https://fellipe.com/demos/lena-js/">Lena.js</a> that I adapted for my purpose (a new pixelate function)</p>
+			<a href="https://kanjiroushi.github.io/tesselborder/">Go to experience</a>
+		</li>
+	</ul>
 </body>
 </html>
