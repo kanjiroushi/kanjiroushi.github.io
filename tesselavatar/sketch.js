@@ -74,7 +74,7 @@ function drawImage() {
       acc.push({'x':x*ratio});
       return acc;
     }
-    if(acc[acc.length-1].x && acc[acc.length-1].y) {
+    if(acc[acc.length-1].x != undefined && acc[acc.length-1].y != undefined) {
       acc.push({'x':x*ratio});
       return acc;
     }
@@ -83,7 +83,6 @@ function drawImage() {
   };
   
   points = sha512(parts[1]).match(/.{1,2}/g).map(x => parseInt(x,16)).reduce(reducer,[]);
-  if(!points[points.length-1].y) points[points.length-1].y = 128 * ratio;
   colors = sha512(parts[0]).match(/.{1,2}/g).map(x => parseInt(x,16));
 
   //we color the canvas
