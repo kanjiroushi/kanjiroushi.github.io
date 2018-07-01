@@ -68,7 +68,7 @@ NN.prototype.processInput = function(inputs) {
 	for(var layerNum = 1;layerNum < this.layers.length;layerNum++) {
 
 		let nbNeurons = this.layers[layerNum];
-		let exitValues = new Array(nbNeurons);
+		let exitValues = new Array(this.layers[nbNeurons]);
 		for(var neuronNum = 0;neuronNum < nbNeurons;neuronNum++) {
 			exitValues[neuronNum] = this.processNeuron(inputs,this.weights[layerNum][neuronNum]);
 		}
