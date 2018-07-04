@@ -47,6 +47,7 @@ ul.experiences li#neurocar .picture{background-image: url(img/neurocar.png); }
 ul.experiences li#tesselborder .picture{background-image: url(img/tesselborder.png); }
 ul.experiences li#tesselavatar .picture{background-image: url(img/tesselavatar.png); }
 ul.experiences li#pointspaint .picture{background-image: url(img/pointspaint.png); }
+ul.experiences li#lines .picture{background-image: url(img/lines.png); }
 
 ul.experiences li h2{
 	margin: 0;
