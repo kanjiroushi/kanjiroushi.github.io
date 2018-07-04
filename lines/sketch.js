@@ -15,8 +15,9 @@ let imgURL = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Tsunami_by_hok
 var img;
 
 
-var nbDirections = 8;
+var nbDirections = 32;
 var nbPointPerRound = 50;
+var threshold = 130;
 
 
 function preload() {
@@ -85,6 +86,11 @@ function setup() {
   var inp15 = createInput(nbPointPerRound,'number');
   inp15.input(changeNbPoints);
 
+  createElement('br');
+  createDiv('threshold');
+  var inp16 = createInput(threshold,'number');
+  inp15.input(changeThreshold);
+  createElement('br');
   buttReload2 = createButton('Reload');
   buttReload2.mousePressed(reloadImg);
 
@@ -148,6 +154,13 @@ function changeNbPoints() {
   nbPointPerRound = parseInt(this.value());
 }
 
+function changeThreshold() {
+  threshold = parseInt(this.value());
+  if(threshold < 5) threshold = 5;
+  if(threshold > 250) threshold = 250;
+}
+
+
 function draw() {
  // background(255);
   stroke(0);
@@ -157,7 +170,7 @@ function draw() {
   for(var i=0;i<nbPointPerRound;i++) {
     x = floor(random(0,width));
     y  = floor(random(0,width));
-    r = floor(random(2,50));
+    r = floor(random(10,30));
     v = createVector(1,0);
     //console.log(x,y,r);
     let maximum = [];
@@ -175,16 +188,27 @@ function draw() {
       //line(x,y,x + v.x,y + v.y);
     }
     
-    var indexOfMaxValue = maximum.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-    //console.log(maximum,indexOfMaxValue);
+    var indexOfMinValue = maximum.reduce((iMin, x, i, arr) => x < arr[iMin] ? i : iMin, 0);
+    
+    if (isNaN(maximum[indexOfMinValue])) continue;
     v = createVector(1,0);
-    let angle = indexOfMaxValue * 2*PI / nbDirections;
+    let angle = indexOfMinValue * 2*PI / nbDirections;
     v.rotate(angle);
     v.setMag(r);
-    let avColor = floor(maximum[indexOfMaxValue])/r;
+    let avColor = floor(maximum[indexOfMinValue])/r;
 
-    stroke(avColor);
-    line(x,y,x + v.x,y + v.y);
+    if(avColor < threshold) {
+      stroke(0);
+      line(x,y,x + v.x,y + v.y);
+      for(var dist=1;dist<r;dist++) {
+        v.setMag(dist);
+        pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
+        //if(pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] > 255) pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
+      }
+    }
+
+
+    
     
   }
 }
