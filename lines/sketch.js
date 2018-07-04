@@ -18,7 +18,7 @@ var img;
 var nbDirections = 32;
 var nbPointPerRound = 50;
 var threshold = 130;
-
+var thresholdEcartType = 110;
 
 function preload() {
   img = loadImage(imgURL);
@@ -87,9 +87,13 @@ function setup() {
   inp15.input(changeNbPoints);
 
   createElement('br');
-  createDiv('threshold');
+  createDiv('threshold average color');
   var inp16 = createInput(threshold,'number');
   inp15.input(changeThreshold);
+  createElement('br');
+  createDiv('threshold standard deviation');
+  var inp16 = createInput(thresholdEcartType,'number');
+  inp15.input(changeThresholdEcartType);
   createElement('br');
   buttReload2 = createButton('Reload');
   buttReload2.mousePressed(reloadImg);
@@ -160,6 +164,12 @@ function changeThreshold() {
   if(threshold > 250) threshold = 250;
 }
 
+function changeThresholdEcartType() {
+  thresholdEcartType = parseInt(this.value());
+  if(thresholdEcartType < 1) thresholdEcartType = 1;
+  if(thresholdEcartType > 254) thresholdEcartType = 254;
+}
+
 
 function draw() {
  // background(255);
@@ -170,7 +180,7 @@ function draw() {
   for(var i=0;i<nbPointPerRound;i++) {
     x = floor(random(0,width));
     y  = floor(random(0,width));
-    r = floor(random(10,30));
+    r = floor(random(5,30));
     v = createVector(1,0);
     //console.log(x,y,r);
     let maximum = [];
@@ -197,14 +207,27 @@ function draw() {
     v.setMag(r);
     let avColor = floor(maximum[indexOfMinValue])/r;
 
+    variance = 0;
     if(avColor < threshold) {
-      stroke(0);
-      line(x,y,x + v.x,y + v.y);
+      
+      for(var dist=1;dist<r;dist++) {
+        v.setMag(dist);
+        variance += Math.pow(pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] - avColor,2);
+        //if(pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] > 255) pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
+      }
+      ecartType = Math.sqrt(variance / dist);
+      
+      if(ecartType > thresholdEcartType) continue;
+
       for(var dist=1;dist<r;dist++) {
         v.setMag(dist);
         pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
         //if(pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] > 255) pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
       }
+
+      stroke(0);
+      line(x,y,x + v.x,y + v.y);
+
     }
 
 
