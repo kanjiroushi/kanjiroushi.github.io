@@ -93,7 +93,7 @@ function setup() {
   createElement('br');
   createDiv('threshold standard deviation');
   var inp16 = createInput(thresholdEcartType,'number');
-  inp15.input(changeThresholdEcartType);
+  inp16.input(changeThresholdEcartType);
   createElement('br');
   buttReload2 = createButton('Reload');
   buttReload2.mousePressed(reloadImg);
@@ -217,17 +217,16 @@ function draw() {
       }
       ecartType = Math.sqrt(variance / dist);
       
-      if(ecartType > thresholdEcartType) continue;
+      if(ecartType <= thresholdEcartType) {
+        for(var dist=1;dist<r;dist++) {
+          v.setMag(dist);
+          pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
+          //if(pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] > 255) pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
+        }
 
-      for(var dist=1;dist<r;dist++) {
-        v.setMag(dist);
-        pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
-        //if(pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] > 255) pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
+        stroke(0);
+        line(x,y,x + v.x,y + v.y);
       }
-
-      stroke(0);
-      line(x,y,x + v.x,y + v.y);
-
     }
 
 
