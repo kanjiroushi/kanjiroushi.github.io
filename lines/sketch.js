@@ -20,6 +20,8 @@ var nbPointPerRound = 50;
 var threshold = 130;
 var thresholdEcartType = 110;
 
+var whiteOnBlack = false;
+
 function preload() {
   img = loadImage(imgURL);
 }
@@ -39,7 +41,8 @@ function loadImg() {
   image(img,0 ,0,canvasWidth,canvasHeight,0,0,img.width,img.height);
   filter(GRAY);
   loadPixels(); 
-  background(255);
+  if(whiteOnBlack) background(0);
+  else background(255);
 }
 
 function setup() {
@@ -94,13 +97,17 @@ function setup() {
   createDiv('threshold standard deviation');
   var inp16 = createInput(thresholdEcartType,'number');
   inp16.input(changeThresholdEcartType);
+  
+
+  createElement('br');
+  checkbox1 = createCheckbox('White on black', whiteOnBlack);
+  checkbox1.changed(setWhiteOnBlack);
+
   createElement('br');
   buttReload2 = createButton('Reload');
   buttReload2.mousePressed(reloadImg);
 
   
-
-
   createElement('br');
   createElement('br');
 
@@ -108,14 +115,8 @@ function setup() {
   button4 = createButton('Save Image');
   button4.mousePressed(saveImage);
 
-  createElement('br');
-  createElement('br');
-
-  button4 = createButton('Redraw');
-  button4.mousePressed(redrawImage);
 
 }
-
 
 function redrawImage() {
   paint = new Paint();
@@ -170,6 +171,14 @@ function changeThresholdEcartType() {
   if(thresholdEcartType > 254) thresholdEcartType = 254;
 }
 
+function setWhiteOnBlack() {
+  if (this.checked()) {
+    whiteOnBlack = true;
+  } else {
+    whiteOnBlack = false;
+  }
+}
+
 
 function draw() {
  // background(255);
@@ -198,17 +207,21 @@ function draw() {
       //line(x,y,x + v.x,y + v.y);
     }
     
-    var indexOfMinValue = maximum.reduce((iMin, x, i, arr) => x < arr[iMin] ? i : iMin, 0);
+    if(whiteOnBlack) var indexOfPickedValue = maximum.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+    else var indexOfPickedValue = maximum.reduce((iMin, x, i, arr) => x < arr[iMin] ? i : iMin, 0);
     
-    if (isNaN(maximum[indexOfMinValue])) continue;
+    if (isNaN(maximum[indexOfPickedValue])) continue;
     v = createVector(1,0);
-    let angle = indexOfMinValue * 2*PI / nbDirections;
+    let angle = indexOfPickedValue * 2*PI / nbDirections;
     v.rotate(angle);
     v.setMag(r);
-    let avColor = floor(maximum[indexOfMinValue])/r;
+    let avColor = floor(maximum[indexOfPickedValue])/r;
 
     variance = 0;
-    if(avColor < threshold) {
+
+    if(whiteOnBlack) var test = avColor > threshold;
+    else var test = avColor < threshold;
+    if(test) {
       
       for(var dist=1;dist<r;dist++) {
         v.setMag(dist);
@@ -220,11 +233,12 @@ function draw() {
       if(ecartType <= thresholdEcartType) {
         for(var dist=1;dist<r;dist++) {
           v.setMag(dist);
-          pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
+          if(whiteOnBlack) pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 0;
+          else pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
           //if(pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] > 255) pixels[(floor(x+v.x)+floor(y+v.y)*width)*4] = 255;
         }
 
-        stroke(0);
+        stroke(avColor);
         line(x,y,x + v.x,y + v.y);
       }
     }
