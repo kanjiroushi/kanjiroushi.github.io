@@ -11,29 +11,56 @@ var starve = 60;
 var maxDist = 0;
 var foodLocations = [];
 var generationNum = 0;
-var mutationRate = 0.1;
+var mutationRate = 0.05;
 var speed = 4;
 var fitnessAlive = 0.1;
-var nbDirections = 4;
+var nbDirections = 8;
+
+var remainingSteps = 11;
 
 function setup() {
   pixelDensity(1);
   createCanvas(scl*nbSquares, scl*nbSquares);
   maxDist = Math.sqrt(2*Math.pow(scl*nbSquares,2));
 
-  //allare fighting for same food
-  for(i=0; i<100;i++) {
+  //All are fighting for same food
+
+  food = createVector(5, 5);
+  food.mult(scl);
+  foodLocations.push(food);
+
+  food = createVector(5, 10);
+  food.mult(scl);
+  foodLocations.push(food);
+
+  food = createVector(15, 15);
+  food.mult(scl);
+  foodLocations.push(food);
+
+  food = createVector(10, 10);
+  food.mult(scl);
+  foodLocations.push(food);
+
+
+  for(i=0; i<96;i++) {
     var cols = floor(width/scl);
     var rows = floor(height/scl);
     food = createVector(floor(random(cols)), floor(random(rows)));
     food.mult(scl);
     foodLocations.push(food);
   }
-  for(var i = 0;i<nbSnakes;i++) snakes.push(new Snake(i));
+
+  colX = 10*scl;
+  colY = 10*scl;
+  for(var i = 0;i<nbSnakes;i++) {
+    snakes.push(new Snake(i));
+    snakes[i].restart(i,colX,colY);
+  }
 }
 
 
 function draw() {
+  remainingSteps--;
 
   for(var i = 0;i<nbSnakes;i++) {
     snakes[i].death();
@@ -101,6 +128,7 @@ function draw() {
     }
 
     //We reset the food and the snakes positions
+    /*
     foodLocations = [];
     for(i=0; i<100;i++) {
       var cols = floor(width/scl);
@@ -109,14 +137,18 @@ function draw() {
       food.mult(scl);
       foodLocations.push(food);
     }
+    */
 
-    colX = floor(random(600/scl))*scl;
-    colY = floor(random(600/scl))*scl;
+    //colX = floor(random(600/scl))*scl;
+    //colY = floor(random(600/scl))*scl;
     colX = 10*scl;
     colY = 10*scl;
     for(i=0;i<nbSnakes;i++) {
       snakes[i].restart(i,colX,colY);
     }
-  }
+
+    remainingSteps = 11 + Math.floor(generationNum/20) * 5;
+    console.log('new remaining steps: ',remainingSteps);
+  } //end no remaining snakes
 }
 

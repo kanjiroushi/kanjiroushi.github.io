@@ -114,6 +114,9 @@ Snake.prototype.dir = function(x, y) {
 Snake.prototype.death = function() {
   if(this.dead) return;
   //we check reach wall
+
+  if(remainingSteps <= 0 )  this.dead = true;
+
   if(this.pos.x < 0 || this.pos.x >= width) this.dead = true;
   if(this.pos.y < 0 || this.pos.y >= height) this.dead = true;
   if(this.lastEat > starve) {
