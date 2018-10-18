@@ -32,7 +32,7 @@ class Door {
 	update(players) {
 		var player = players.filter(p => p.playerNum === this.doorNum)[0];
 		var coll = Tools.detectSpriteCollision(player,this);
-		if(coll.length === 6) this.active = true;
+		if(coll.length === Tools.nbCollisionPoints) this.active = true;
 		else this.active = false;
 	      
 	}; //end update

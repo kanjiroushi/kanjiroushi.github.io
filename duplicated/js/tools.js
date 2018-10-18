@@ -41,7 +41,8 @@ class Tools {
 	    if(player.y < sprite.y-sprite.bounding.h) return [];
 
 
-	    //We check for the 6 pixels if they collide
+	    //We check for the 7 pixels if they collide
+	    //each corner plus middle of sprite + center
 	    let collidePixels = [];
 	    collidePixels.push({id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y});
 	    collidePixels.push({id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y});
@@ -49,6 +50,7 @@ class Tools {
 	    collidePixels.push({id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h/2});
 	    collidePixels.push({id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h});
 	    collidePixels.push({id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h});
+	    collidePixels.push({id:'center',x:player.x,y:player.y-player.bounding.h/2});
 
 	    let colliding = [];
 
@@ -65,3 +67,4 @@ class Tools {
 	}
 
 }
+Tools.nbCollisionPoints = 7;

@@ -58,7 +58,7 @@ class Player {
 
 
 
-	update(keysPressed,platforms) {
+	update(keysPressed,platforms,players) {
 		//tick counter for animation
 	    this.tickCount += 1;
 	    if (this.tickCount > this.ticksPerFrame) {
@@ -109,49 +109,77 @@ class Player {
 		//We detect the collisions
 		this.onGround=false;
 
-	    for(let i=0;i<platforms.length;i++) {
+	    platforms.forEach(plat => {
 
-	        var coll = Tools.detectPlatformCollision(this,platforms[i]);
+	        let coll = Tools.detectPlatformCollision(this,plat);
 
-	        if(coll.length === 0) continue;
+	        if(coll.length === 0) return;
 
 	        //on the ground
 	        if(coll.includes('bottomRight') && coll.includes('bottomLeft')) {
-	        	this.y=platforms[i].y;
+	        	this.y=plat.y;
 	            this.onGround=true;
-	            this.onGroundPlatform=platforms[i].id;
+	            this.onGroundPlatform=plat.id;
 	            this.speed.y = 0;
-	            continue;
+	            return;
 	        }
 	        //hit the top
 	        if(coll.includes('topRight') && coll.includes('topLeft')) {
-	        	this.y=platforms[i].y+platforms[i].h+this.bounding.h+1;
+	        	this.y=plat.y+plat.h+this.bounding.h+1;
 	            this.speed.y=0;
-	            continue;
+	            return;
 	        }
 	        //hit the platform at an angle
 	        if(coll.length ==1 && (coll.includes('topRight') || coll.includes('topLeft'))) {
-	        	this.y=platforms[i].y+platforms[i].h+this.bounding.h+1;
+	        	this.y=plat.y+plat.h+this.bounding.h+1;
 	        	if(this.speed.y < 0) this.speed.y = 0;
-	            continue;
+	            return;
 	        }
 	        if(coll.length ==1 && (coll.includes('bottomRight') || coll.includes('bottomLeft'))) {
-	        	this.y=platforms[i].y;
-	            continue;
+	        	this.y=plat.y;
+	            return;
 	        }
 	        //If the middle of the player hit, it is against the wall
 	        if(coll.includes('middleRight')) {
-	        	this.x=platforms[i].x-this.bounding.w/2-1;
+	        	this.x=plat.x-this.bounding.w/2-1;
 	            this.speed.x = 0;
-	            continue;
+	            return;
 	        }
 	        if(coll.includes('middleLeft')) {
-	        	this.x=platforms[i].x+platforms[i].w+this.bounding.w/2+1;
+	        	this.x=plat.x+plat.w+this.bounding.w/2+1;
 	            this.speed.x = 0;
-	            continue;
+	            return;
 	        }
-	    } //end detection collision
+	    })
 
+
+	    //We detect the collision with other players
+	    players.forEach(p => {
+	    	if(p.playerNum == this.playerNum) return;
+	    	let coll = Tools.detectSpriteCollision(this,p);
+	    	
+	    	if(coll.length === 0) return;
+
+	        //on top of the other guy
+	        if(coll.includes('bottomRight') && coll.includes('bottomLeft')) {
+	        	this.y = p.y-p.bounding.h;
+	            return;
+	        }
+	        //hit the top
+	        if(coll.includes('topRight') && coll.includes('topLeft')) {
+	        	p.y = this.y-this.bounding.h;
+	            return;
+	        }
+	        //hit from the right
+	        if(coll.includes('topRight') || coll.includes('middleRight') || coll.includes('bottomRight')) {
+	        	this.x=p.x-p.w/2;
+	            return;
+	        }
+	        if(coll.includes('topLeft') || coll.includes('middleLeft') || coll.includes('bottomLeft')) {
+	        	this.x=p.x+p.w/2;
+	            return;
+	        }
+	    })
 
 	}; //end update
 

@@ -23,9 +23,9 @@ window.onload=function() {
     playerImage = new Image();
 
     players.push(new Player({context:ctx,image:playerImage,playerNum:0,x:100,y:450}));
-    players.push(new Player({context:ctx,image:playerImage,playerNum:1,x:300,y:450}));
-    //players.push(new Player({context:ctx,image:playerImage,playerNum:2,x:300,y:450}));
-    //players.push(new Player({context:ctx,image:playerImage,playerNum:3,x:300,y:100}));
+    players.push(new Player({context:ctx,image:playerImage,playerNum:1,x:700,y:450}));
+    //players.push(new Player({context:ctx,image:playerImage,playerNum:2,x:300,y:100}));
+    //players.push(new Player({context:ctx,image:playerImage,playerNum:3,x:500,y:100}));
 
     playerImage.addEventListener("load", gameLoop);
     playerImage.src = "sprites/player.png";
@@ -35,6 +35,8 @@ window.onload=function() {
     
     doors.push(new Door({context:ctx,image:doorsImage,doorNum:0,x:403,y:canv.height-128}));
     doors.push(new Door({context:ctx,image:doorsImage,doorNum:1,x:600,y:canv.height-32}));
+    //doors.push(new Door({context:ctx,image:doorsImage,doorNum:2,x:403,y:268}));
+    //doors.push(new Door({context:ctx,image:doorsImage,doorNum:3,x:600,y:268}));
     doorsImage.src = "sprites/doors.png";
 
 
@@ -134,13 +136,24 @@ window.onload=function() {
         }
     );
 
+    plat.push(
+        {
+        id:'testBlock',
+        type:'platform',
+        x:64*7,
+        y:268-32,
+        w:64,
+        h:32
+        }
+    );
+
 }
 
 //gameLoop the page
 function gameLoop() {
     
     players.forEach(function(p) {
-        p.update(keysPressed,plat); 
+        p.update(keysPressed,plat,players); 
     });
     doors.forEach(function(d) {
         d.update(players); 
