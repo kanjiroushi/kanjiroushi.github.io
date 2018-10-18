@@ -43,7 +43,7 @@ class Player {
 
 
 	    this.bounding= {
-	        w:14,
+	        w:12,
 	        h:18,
 	    };
 
@@ -114,25 +114,45 @@ class Player {
 	    for(let i=0;i<platforms.length;i++) {
 
 	        var coll = this.detectCollision(platforms[i]);
-	        if(coll == 'top') {
-	            this.y=platforms[i].y;
+
+	        if(coll.length === 0) continue;
+
+	        //on the ground
+	        if(coll.includes('bottomRight') && coll.includes('bottomLeft')) {
+	        	this.y=platforms[i].y;
 	            this.onGround=true;
 	            this.onGroundPlatform=platforms[i].id;
 	            this.speed.y = 0;
+	            continue;
 	        }
-	        if(coll == 'bottom') {
-	            this.y=platforms[i].y+platforms[i].h+this.bounding.h;
+	        //hit the top
+	        if(coll.includes('topRight') && coll.includes('topLeft')) {
+	        	this.y=platforms[i].y+platforms[i].h+this.bounding.h+1;
 	            this.speed.y=0;
+	            continue;
 	        }
-	        if(coll == 'left') {
-	            this.x=platforms[i].x-this.bounding.w/2;
+	        //hit the platform at an angle
+	        if(coll.length ==1 && (coll.includes('topRight') || coll.includes('topLeft'))) {
+	        	this.y=platforms[i].y+platforms[i].h+this.bounding.h+1;
+	        	if(this.speed.y < 0) this.speed.y = 0;
+	            continue;
+	        }
+	        if(coll.length ==1 && (coll.includes('bottomRight') || coll.includes('bottomLeft'))) {
+	        	this.y=platforms[i].y;
+	            continue;
+	        }
+	        //If the middle of the player hit, it is against the wall
+	        if(coll.includes('middleRight')) {
+	        	this.x=platforms[i].x-this.bounding.w/2-1;
 	            this.speed.x = 0;
+	            continue;
 	        }
-	        if(coll == 'right') {
-	            this.x=platforms[i].x+platforms[i].w+this.bounding.w/2;
+	        if(coll.includes('middleLeft')) {
+	        	this.x=platforms[i].x+platforms[i].w+this.bounding.w/2+1;
 	            this.speed.x = 0;
+	            continue;
 	        }
-	    }
+	    } //end detection collision
 
 
 	}; //end update
@@ -143,20 +163,33 @@ class Player {
 
 	detectCollision(platform) {
 	    //On detecte si aucune collision
-	    if((this.x+this.bounding.w/2) < platform.x ) return ;
-	    if((this.x-this.bounding.w/2) > (platform.x+platform.w) ) return ;
-	    if((this.y-this.bounding.h) > (platform.y+platform.h) ) return ;
-	    if(this.y < platform.y) return ;
+	    if((this.x+this.bounding.w/2) < platform.x ) return [];
+	    if((this.x-this.bounding.w/2) > (platform.x+platform.w) ) return [];
+	    if((this.y-this.bounding.h) > (platform.y+platform.h) ) return [];
+	    if(this.y < platform.y) return [];
 
-	    //on regarde dans les premier pixels et derniers pixels de la platforme
-	    //sauf si le that est sur le sol(pour éviter le décalage de pixel)
-	    if(this.onGroundPlatform != platform.id && Math.abs(this.x+this.bounding.w/2-platform.x) < this.bounding.w) return 'left';
-	    if(this.onGroundPlatform != platform.id && Math.abs(this.x-this.bounding.w/2-platform.x-platform.w) < this.bounding.w) return 'right';
-	    
-	    //on regarde en dessous et au dessus
-	    if(this.y >= platform.y && (this.y-this.bounding.h) < (platform.y + platform.h/2)) return 'top';
-	    if((this.y-this.bounding.h) < platform.y+platform.h && this.y > (platform.y + platform.h/2)) return 'bottom';
-	    return;
+
+	    //We check for the 6 pixels if they collide
+	    let collidePixels = [];
+	    collidePixels.push({id:'bottomRight',x:this.x+this.bounding.w/2,y:this.y});
+	    collidePixels.push({id:'bottomLeft',x:this.x-this.bounding.w/2,y:this.y});
+	    collidePixels.push({id:'middleRight',x:this.x+this.bounding.w/2,y:this.y-this.bounding.h/2});
+	    collidePixels.push({id:'middleLeft',x:this.x-this.bounding.w/2,y:this.y-this.bounding.h/2});
+	    collidePixels.push({id:'topRight',x:this.x+this.bounding.w/2,y:this.y-this.bounding.h});
+	    collidePixels.push({id:'topLeft',x:this.x-this.bounding.w/2,y:this.y-this.bounding.h});
+
+	    let colliding = [];
+
+	    collidePixels.forEach(function(pix) {
+	    	if(
+	    		pix.x >= platform.x && 
+	    		pix.x <= (platform.x+platform.w) && 
+	    		pix.y >= platform.y && 
+	    		pix.y <= (platform.y+platform.h)
+	    	) colliding.push(pix.id);
+	    })
+
+	    return colliding;
 	}
 
 
