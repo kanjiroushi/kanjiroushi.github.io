@@ -47,8 +47,6 @@ class Player {
 	        h:18,
 	    };
 
-		this.width = options.width;
-		this.height = options.height;
 		this.image = options.image;
 	} //end constructor
 
@@ -113,7 +111,7 @@ class Player {
 
 	    for(let i=0;i<platforms.length;i++) {
 
-	        var coll = this.detectCollision(platforms[i]);
+	        var coll = Tools.detectPlatformCollision(this,platforms[i]);
 
 	        if(coll.length === 0) continue;
 
@@ -161,36 +159,7 @@ class Player {
 
 
 
-	detectCollision(platform) {
-	    //On detecte si aucune collision
-	    if((this.x+this.bounding.w/2) < platform.x ) return [];
-	    if((this.x-this.bounding.w/2) > (platform.x+platform.w) ) return [];
-	    if((this.y-this.bounding.h) > (platform.y+platform.h) ) return [];
-	    if(this.y < platform.y) return [];
-
-
-	    //We check for the 6 pixels if they collide
-	    let collidePixels = [];
-	    collidePixels.push({id:'bottomRight',x:this.x+this.bounding.w/2,y:this.y});
-	    collidePixels.push({id:'bottomLeft',x:this.x-this.bounding.w/2,y:this.y});
-	    collidePixels.push({id:'middleRight',x:this.x+this.bounding.w/2,y:this.y-this.bounding.h/2});
-	    collidePixels.push({id:'middleLeft',x:this.x-this.bounding.w/2,y:this.y-this.bounding.h/2});
-	    collidePixels.push({id:'topRight',x:this.x+this.bounding.w/2,y:this.y-this.bounding.h});
-	    collidePixels.push({id:'topLeft',x:this.x-this.bounding.w/2,y:this.y-this.bounding.h});
-
-	    let colliding = [];
-
-	    collidePixels.forEach(function(pix) {
-	    	if(
-	    		pix.x >= platform.x && 
-	    		pix.x <= (platform.x+platform.w) && 
-	    		pix.y >= platform.y && 
-	    		pix.y <= (platform.y+platform.h)
-	    	) colliding.push(pix.id);
-	    })
-
-	    return colliding;
-	}
+	
 
 
 

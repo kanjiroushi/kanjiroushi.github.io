@@ -2,7 +2,7 @@ grav=0.5;
 plat=[];
 
 players = [];
-
+doors = [];
 
 keysPressed = {
     left:false,
@@ -13,8 +13,7 @@ keysPressed = {
 background = new Image();
 background.src = "testbg.png";
 
-doors = new Image();
-doors.src = "sprites/doors.png";
+
 
 window.onload=function() {
     canv=document.getElementById("gc");
@@ -24,12 +23,21 @@ window.onload=function() {
     playerImage = new Image();
 
     players.push(new Player({context:ctx,image:playerImage,playerNum:0,x:100,y:450}));
-    players.push(new Player({context:ctx,image:playerImage,playerNum:1,x:100,y:100}));
-    players.push(new Player({context:ctx,image:playerImage,playerNum:2,x:300,y:450}));
-    players.push(new Player({context:ctx,image:playerImage,playerNum:3,x:300,y:100}));
+    players.push(new Player({context:ctx,image:playerImage,playerNum:1,x:300,y:450}));
+    //players.push(new Player({context:ctx,image:playerImage,playerNum:2,x:300,y:450}));
+    //players.push(new Player({context:ctx,image:playerImage,playerNum:3,x:300,y:100}));
 
     playerImage.addEventListener("load", gameLoop);
     playerImage.src = "sprites/player.png";
+
+
+    doorsImage = new Image();
+    
+    doors.push(new Door({context:ctx,image:doorsImage,doorNum:0,x:403,y:canv.height-128}));
+    doors.push(new Door({context:ctx,image:doorsImage,doorNum:1,x:600,y:canv.height-32}));
+    doorsImage.src = "sprites/doors.png";
+
+
 
     //some listener on key press and keey release
     document.addEventListener("keydown",keyDown);
@@ -126,18 +134,6 @@ window.onload=function() {
         }
     );
 
-    plat.push(
-        {
-        id:'testBlock',
-        type:'platform',
-        x:64*8,
-        y:canv.height-64*3,
-        w:64,
-        h:32
-        }
-    );
-
-
 }
 
 //gameLoop the page
@@ -146,9 +142,19 @@ function gameLoop() {
     players.forEach(function(p) {
         p.update(keysPressed,plat); 
     });
-    draw();
+    doors.forEach(function(d) {
+        d.update(players); 
+    });
+    render();
 
+
+    let allDoorsActive = true;
+    doors.forEach(function(d) {
+        if(!d.active) allDoorsActive = false;
+    });
     
+    if(allDoorsActive) console.log('You win');
+
     //We request the next animation already
     window.requestAnimationFrame(gameLoop);
 
@@ -157,21 +163,23 @@ function gameLoop() {
 
 
 
-function draw() {
-    //dessine le background
-    //ctx.fillStyle="#7BB0D3";
-    //ctx.fillRect(0,0,canv.width,canv.height);
-
+function render() {
+    //drawing background
     ctx.drawImage(background,0,0);
 
-    ctx.drawImage(doors,0,48,48*4,48,400,canv.height-32*2.5,48*4,48);
 
-    ctx.drawImage(doors,0,0,48*4,48,32,canv.height-32*2.5,48*4,48);
+    //drawing doors
+    doors.forEach(function(d) {
+        d.render();
+    });
 
-    //dessine le joueur
+
+    //drawing players
     players.forEach(function(p) {
         p.render();
     });
+
+    
 
     //dessine les plateformes
     ctx.fillStyle="black";
