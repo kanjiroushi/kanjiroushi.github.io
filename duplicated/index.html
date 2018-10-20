@@ -11,9 +11,24 @@
         	<canvas id="gc" width="800" height="600"></canvas>
 
           <div id="controls">
-            <div id="leftKey" onmousedown="simulateKey('down','left')" onmouseup="simulateKey('up','left')"></div>
-            <div id="rightKey" onmousedown="simulateKey('down','right')" onmouseup="simulateKey('up','right')"></div>
-            <div id="upKey" onmousedown="simulateKey('down','up')" onmouseup="simulateKey('up','up')"></div>
+            <div id="leftKey" 
+              onmousedown="simulateKey('down','left')" 
+              onmouseup="simulateKey('up','left')"
+              ontouchstart="simulateKey('down','left')"
+              ontouchend="simulateKey('up','left')"
+            ></div>
+            <div id="rightKey" 
+              onmousedown="simulateKey('down','right')" 
+              onmouseup="simulateKey('up','right')"
+              ontouchstart="simulateKey('down','right')"
+              ontouchend="simulateKey('up','right')"
+            ></div>
+            <div id="upKey" 
+              onmousedown="simulateKey('down','up')" 
+              onmouseup="simulateKey('up','up')"
+              ontouchstart="simulateKey('down','up')"
+              ontouchend="simulateKey('up','up')"
+            ></div>
           </div>
 
         </div>
