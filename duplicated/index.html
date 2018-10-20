@@ -9,6 +9,13 @@
     	<div class="centered">
     		<img src="img/duplicated-header.png" />
         	<canvas id="gc" width="800" height="600"></canvas>
+
+          <div id="controls">
+            <div id="leftKey" onmousedown="simulateKey('down','left')" onmouseup="simulateKey('up','left')"></div>
+            <div id="rightKey" onmousedown="simulateKey('down','right')" onmouseup="simulateKey('up','right')"></div>
+            <div id="upKey" onmousedown="simulateKey('down','up')" onmouseup="simulateKey('up','up')"></div>
+          </div>
+
         </div>
     </body>
 </html>

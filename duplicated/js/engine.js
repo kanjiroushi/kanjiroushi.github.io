@@ -230,3 +230,23 @@ function keyUp(evt) {
             break;
     }
 }
+
+
+function simulateKey(action,key) {
+    let keyNum = 0;
+    switch(key) {
+        case "left":
+            keyNum = 37;
+            break;
+        case "up":
+            keyNum = 38;
+            break;
+        case "right":
+            keyNum = 39;
+            break;
+    }
+    let evt = {};
+    evt.keyCode = keyNum;
+    if(action == "down") keyDown(evt);
+    else keyUp(evt);
+}

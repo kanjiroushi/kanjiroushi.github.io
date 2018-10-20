@@ -11,3 +11,23 @@ background-color:#FCFCFC;
 	margin-top:10px;
 	box-shadow: -1px 1px 1px #AAA;
 }
+
+#controls > div {
+	width:100px;
+	height:100px;
+	margin:10px;
+	display: inline-block;
+	user-select: none;
+	background:url(../img/keys.png) no-repeat;
+}
+
+#controls #leftKey{
+	background-position: 0px 0px;
+}
+#controls #rightKey{
+	background-position: -100px 0px;
+}
+#controls #upKey{
+	float:right;
+	background-position: -200px 0px;
+}
