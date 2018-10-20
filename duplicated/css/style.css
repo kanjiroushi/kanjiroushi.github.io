@@ -11,6 +11,9 @@ background-color:#FCFCFC;
 	margin-top:10px;
 	box-shadow: -1px 1px 1px #AAA;
 }
+.centered.big{
+	width:1000px;
+}
 
 #controls > div {
 	width:100px;
@@ -36,3 +39,66 @@ background-color:#FCFCFC;
 	float:right;
 	background-position: -200px 0px;
 }
+
+#gc{
+	display:inline-block;
+	cursor:pointer;
+}
+#tools{
+display:inline-block;
+width:180px;
+padding:0 10px;
+float:right;
+background-color:#EAEAEA;
+min-height:592px;
+user-select: none;
+}
+
+#tools h2{
+	margin:5px 0 0 0;
+}
+
+.tile{
+	width:16px;
+	height:16px;
+	margin:1px;
+	border-width:2px;
+	border-style: solid;
+	display:inline-block;
+	background:url(../sprites/tileset_grassAndDirt.png);
+	cursor:pointer;
+}
+.tile.selected{border-color:#33CCCC;}
+
+.tile0_0{background-position:0px 0px;}
+.tile0_1{background-position:0px -16px;}
+.tile0_2{background-position:0px -32px;}
+.tile0_3{background-position:0px -48px;}
+.tile1_0{background-position:-16px 0px;}
+.tile1_1{background-position:-16px -16px;}
+.tile1_2{background-position:-16px -32px;}
+.tile1_3{background-position:-16px -48px;}
+.tile2_0{background-position:-32px 0px;}
+.tile2_1{background-position:-32px -16px;}
+.tile2_2{background-position:-32px -32px;}
+.tile2_3{background-position:-32px -48px;}
+.tile3_0{background-position:-48px 0px;}
+.tile3_1{background-position:-48px -16px;}
+.tile3_2{background-position:-48px -32px;}
+.tile3_3{background-position:-48px -48px;}
+.tile4_0{background-position:-64px 0px;}
+.tile4_1{background-position:-64px -16px;}
+.tile4_2{background-position:-64px -32px;}
+.tile4_3{background-position:-64px -48px;}
+.tile5_0{background-position:-80px 0px;}
+.tile5_1{background-position:-80px -16px;}
+.tile5_2{background-position:-80px -32px;}
+.tile5_3{background-position:-80px -48px;}
+.tile6_0{background-position:-96px 0px;}
+.tile6_1{background-position:-96px -16px;}
+.tile6_2{background-position:-96px -32px;}
+.tile6_3{background-position:-96px -48px;}
+.tile7_0{background-position:-112px 0px;}
+.tile7_1{background-position:-112px -16px;}
+.tile7_2{background-position:-112px -32px;}
+.tile7_3{background-position:-112px -48px;}

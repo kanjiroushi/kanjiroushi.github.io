@@ -25,6 +25,11 @@ window.onload=function() {
     ctx=canv.getContext("2d");
     
 
+
+    canv.addEventListener('click', evt => {
+       console.log('canvas click',evt.layerX,evt.layerY);
+    });
+
     playerImage = new Image();
 
     players.push(new Player({context:ctx,image:playerImage,playerNum:0,x:100,y:450}));
