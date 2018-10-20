@@ -1,18 +1,23 @@
-grav=0.5;
-plat=[];
+let grav=0.5;
 
-players = [];
-doors = [];
 
-keysPressed = {
+let plat=[];
+let players = [];
+let doors = [];
+
+let keysPressed = {
     left:false,
     right:false,
     up:false,
 }
 
-background = new Image();
+let background = new Image();
 background.src = "testbg.png";
 
+let youWinBoard = new Image();
+youWinBoard.src = "sprites/youWinBoard.png";
+
+let youWin = false;
 
 
 window.onload=function() {
@@ -119,22 +124,11 @@ window.onload=function() {
         type:'platform',
         x:64*6,
         y:canv.height-64*2,
-        w:64,
+        w:64*3,
         h:32
         }
     );
 
-
-    plat.push(
-        {
-        id:'testBlock',
-        type:'platform',
-        x:64*7,
-        y:canv.height-64*2,
-        w:64,
-        h:32
-        }
-    );
 
     plat.push(
         {
@@ -152,12 +146,15 @@ window.onload=function() {
 //gameLoop the page
 function gameLoop() {
     
-    players.forEach(function(p) {
-        p.update(keysPressed,plat,players); 
-    });
-    doors.forEach(function(d) {
-        d.update(players); 
-    });
+
+    if(!youWin) {
+        players.forEach(function(p) {
+            p.update(keysPressed,plat,players); 
+        });
+        doors.forEach(function(d) {
+            d.update(players); 
+        });
+    }
     render();
 
 
@@ -166,8 +163,9 @@ function gameLoop() {
         if(!d.active) allDoorsActive = false;
     });
     
-    if(allDoorsActive) console.log('You win');
-
+    if(allDoorsActive) {
+        youWin = true;
+    }
     //We request the next animation already
     window.requestAnimationFrame(gameLoop);
 
@@ -180,13 +178,13 @@ function render() {
     //drawing background
     ctx.drawImage(background,0,0);
 
+    //You win board
+    if(youWin) ctx.drawImage(youWinBoard,0,0,300,250,(800-300)/2,0,300,250);
 
     //drawing doors
     doors.forEach(function(d) {
         d.render();
     });
-
-
     //drawing players
     players.forEach(function(p) {
         p.render();

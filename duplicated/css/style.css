@@ -1,4 +1,13 @@
 body{
 padding:0;
 margin:0;
+background-color:#FCFCFC;
+}
+
+.centered{
+	width:800px;
+	margin:0 auto;
+	padding:10px;
+	margin-top:10px;
+	box-shadow: -1px 1px 1px #AAA;
 }
