@@ -17,6 +17,7 @@ background-color:#FCFCFC;
 	height:100px;
 	margin:10px;
 	display: inline-block;
+	-webkit-user-select: none;
 	user-select: none;
 	background:url(../img/keys.png) no-repeat;
 }
