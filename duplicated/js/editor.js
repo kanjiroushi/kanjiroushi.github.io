@@ -251,14 +251,31 @@ window.onload = function() {
 		return false;
 	});
 
-}
+
+	//test transfer data via url
+	var url = new URL(window.location.href);
+	var data = url.searchParams.get("data");
+
+	if(data && data.length > 0) {
+		var zip = new JSZip();
+
+		let rawZip = decodeDataFromUrl(data);
+		zip.loadAsync(rawZip).then(function (read) {
+	        zip.file("data.json").async("string").then((data) => {
+	        	mapData = JSON.parse(data);
+	        	reloadMap();
+	        })
+	    });
+	}
+
+
+} //end onload
 
 loadLayout = function() {
 	if($('#layoutLoader').val().length == 0) return;
 	$.getJSON( "layouts/"+$('#layoutLoader').val()+".json", function(data) {
-	  mapData = data;
-	  reloadMap();
-
+		mapData = data;
+		reloadMap();
 	})
 }
 reloadMap = function() {
@@ -388,3 +405,37 @@ selectDoor = function(index) {
 	doorIndex = index;
 	reloadMap();
 }
+
+
+
+
+
+//https://jsfiddle.net/magikMaker/7bjaT/
+encodeDataForURL = function (str){
+	str= window.btoa(str);
+    return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '@');
+}
+
+decodeDataFromUrl = function(str){
+    str = str.replace(/-/g, '+').replace(/_/g, '/').replace(/@/g, '=');
+    return window.atob(str); 
+}
+
+testLevel = function() {
+	$('#instruction').html('You may need to allow pop up windows');
+	var zip = new JSZip();
+	zip.file("data.json", JSON.stringify(mapData));
+	zip.generateAsync({
+		type:"string",
+		compression: "DEFLATE",
+	    compressionOptions: {
+	        level: 9
+	    }
+	})
+	.then(function(content) {
+		var encodedData = encodeDataForURL(content);
+		console.log(encodedData);
+		window.open('editor.html?data='+encodedData, '_blank');
+	});
+}
+
