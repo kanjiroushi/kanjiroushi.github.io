@@ -2,6 +2,11 @@ body{
 padding:0;
 margin:0;
 background-color:#FCFCFC;
+font-family: 'Press Start 2P', cursive;
+}
+
+#editor #bannerImage{
+margin-bottom: 20px;
 }
 
 .centered{
@@ -44,6 +49,22 @@ background-color:#FCFCFC;
 	display:inline-block;
 	cursor:pointer;
 }
+
+#position{
+font-size:8px;
+margin-top:10px;
+display:inline-block;
+width:300px;
+user-select: none;
+}
+#instruction{
+display:inline-block;
+font-size:8px;
+width:680px;
+text-align:right;
+user-select: none;
+}
+
 #tools{
 display:inline-block;
 width:180px;
@@ -55,6 +76,7 @@ user-select: none;
 }
 
 #tools h2{
+	font-size: 16px;
 	margin:5px 0 0 0;
 }
 
