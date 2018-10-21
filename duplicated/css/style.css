@@ -54,16 +54,20 @@ margin-bottom: 20px;
 font-size:8px;
 margin-top:10px;
 display:inline-block;
-width:300px;
+width:320px;
 user-select: none;
 }
 #instruction{
 display:inline-block;
 font-size:8px;
-width:680px;
+width:660px;
 text-align:right;
 user-select: none;
 }
+
+
+
+
 
 #tools{
 display:inline-block;
@@ -75,52 +79,143 @@ min-height:592px;
 user-select: none;
 }
 
+#tools select{
+font-family: 'Press Start 2P', cursive;
+font-size:7px;
+}
+
 #tools h2{
-	font-size: 16px;
-	margin:5px 0 0 0;
+font-size: 16px;
+margin:10px 0 0 0;
 }
 
-.tile{
-	width:16px;
-	height:16px;
-	margin:1px;
-	border-width:2px;
-	border-style: solid;
-	display:inline-block;
-	background:url(../sprites/tileset_grassAndDirt.png);
-	cursor:pointer;
+#tools button{
+font-family: 'Press Start 2P', cursive;
 }
-.tile.selected{border-color:#33CCCC;}
 
-.tile0_0{background-position:0px 0px;}
-.tile0_1{background-position:0px -16px;}
-.tile0_2{background-position:0px -32px;}
-.tile0_3{background-position:0px -48px;}
-.tile1_0{background-position:-16px 0px;}
-.tile1_1{background-position:-16px -16px;}
-.tile1_2{background-position:-16px -32px;}
-.tile1_3{background-position:-16px -48px;}
-.tile2_0{background-position:-32px 0px;}
-.tile2_1{background-position:-32px -16px;}
-.tile2_2{background-position:-32px -32px;}
-.tile2_3{background-position:-32px -48px;}
-.tile3_0{background-position:-48px 0px;}
-.tile3_1{background-position:-48px -16px;}
-.tile3_2{background-position:-48px -32px;}
-.tile3_3{background-position:-48px -48px;}
-.tile4_0{background-position:-64px 0px;}
-.tile4_1{background-position:-64px -16px;}
-.tile4_2{background-position:-64px -32px;}
-.tile4_3{background-position:-64px -48px;}
-.tile5_0{background-position:-80px 0px;}
-.tile5_1{background-position:-80px -16px;}
-.tile5_2{background-position:-80px -32px;}
-.tile5_3{background-position:-80px -48px;}
-.tile6_0{background-position:-96px 0px;}
-.tile6_1{background-position:-96px -16px;}
-.tile6_2{background-position:-96px -32px;}
-.tile6_3{background-position:-96px -48px;}
-.tile7_0{background-position:-112px 0px;}
-.tile7_1{background-position:-112px -16px;}
-.tile7_2{background-position:-112px -32px;}
-.tile7_3{background-position:-112px -48px;}
+#tools .tile{
+width:16px;
+height:16px;
+margin:1px;
+border-width:2px;
+border-style: solid;
+display:inline-block;
+background:url(../sprites/tileset_grassAndDirt.png);
+cursor:pointer;
+float:left;
+}
+#tools .tile.selected{border-color:#33CCCC;}
+
+#tools .tile0_0{background-position:0px 0px;}
+#tools .tile0_1{background-position:0px -16px;}
+#tools .tile0_2{background-position:0px -32px;}
+#tools .tile0_3{background-position:0px -48px;}
+#tools .tile1_0{background-position:-16px 0px;}
+#tools .tile1_1{background-position:-16px -16px;}
+#tools .tile1_2{background-position:-16px -32px;}
+#tools .tile1_3{background-position:-16px -48px;}
+#tools .tile2_0{background-position:-32px 0px;}
+#tools .tile2_1{background-position:-32px -16px;}
+#tools .tile2_2{background-position:-32px -32px;}
+#tools .tile2_3{background-position:-32px -48px;}
+#tools .tile3_0{background-position:-48px 0px;}
+#tools .tile3_1{background-position:-48px -16px;}
+#tools .tile3_2{background-position:-48px -32px;}
+#tools .tile3_3{background-position:-48px -48px;}
+#tools .tile4_0{background-position:-64px 0px;}
+#tools .tile4_1{background-position:-64px -16px;}
+#tools .tile4_2{background-position:-64px -32px;}
+#tools .tile4_3{background-position:-64px -48px;}
+#tools .tile5_0{background-position:-80px 0px;}
+#tools .tile5_1{background-position:-80px -16px;}
+#tools .tile5_2{background-position:-80px -32px;}
+#tools .tile5_3{background-position:-80px -48px;}
+#tools .tile6_0{background-position:-96px 0px;}
+#tools .tile6_1{background-position:-96px -16px;}
+#tools .tile6_2{background-position:-96px -32px;}
+#tools .tile6_3{background-position:-96px -48px;}
+#tools .tile7_0{background-position:-112px 0px;}
+#tools .tile7_1{background-position:-112px -16px;}
+#tools .tile7_2{background-position:-112px -32px;}
+#tools .tile7_3{background-position:-112px -48px;}
+
+
+
+#tools #platformsList{
+margin:0;
+padding:0;
+font-size:8px;
+list-style: none;
+border-top:1px #000 solid;
+}
+#tools #platformsList li{
+border-bottom:1px #000 solid;
+margin:2px 0;
+}
+
+#tools #playersList{
+margin:0;
+padding:0;
+font-size:8px;
+list-style: none;
+border-top:1px #000 solid;
+}
+#tools #playersList li{
+border-bottom:1px #000 solid;
+margin:2px 0;
+}
+#tools #playersList .image{
+cursor:pointer;
+background:url(../sprites/player.png);
+width:24px;
+height:24px;
+display: inline-block;
+border-width:2px;
+border-style: solid;
+border-color:#EAEAEA;
+}
+#tools #playersList .data{
+display: inline-block;
+width:150px;
+}
+#tools #playersList .selected .image{border-color:#33CCCC;}
+
+#tools #playersList .player0 .image{background-position:0px 0px;}
+#tools #playersList .player1 .image{background-position:0px -24px;}
+#tools #playersList .player2 .image{background-position:0px -48px;}
+#tools #playersList .player3 .image{background-position:0px -72px;}
+
+
+
+#tools #doorsList{
+margin:0;
+padding:0;
+font-size:8px;
+list-style: none;
+border-top:1px #000 solid;
+}
+#tools #doorsList li{
+border-bottom:1px #000 solid;
+margin:2px 0;
+}
+#tools #doorsList .image{
+cursor:pointer;
+background:url(../sprites/doors.png);
+width:48px;
+height:48px;
+display: inline-block;
+border-width:2px;
+border-style: solid;
+border-color:#EAEAEA;
+}
+#tools #doorsList .data{
+display: inline-block;
+width:100px;
+}
+
+#tools #doorsList .selected .image{border-color:#33CCCC;}
+
+#tools #doorsList .door0 .image{background-position:0px 0px;}
+#tools #doorsList .door1 .image{background-position:0px -48px;}
+#tools #doorsList .door2 .image{background-position:0px -96px;}
+#tools #doorsList .door3 .image{background-position:0px -144px;}

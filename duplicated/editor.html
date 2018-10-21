@@ -12,10 +12,27 @@
         <canvas id="gc" width="800" height="592"></canvas>
         <div id="tools">
           <h2>Load Layout</h2>
-          <button onclick="loadLayout()">Load</button>
-          <h2>Nb Players</h2>
+          <select id="layoutLoader" onchange="loadLayout()">
+            <option value="">Please select...</option>
+            <option value="onewindow">One window</option>
+            <option value="twowindowshorizontal">Two windows horizontal</option>
+            <option value="twowindowsvertical">Two windows vertical</option>
+            <option value="fourwindows">Four windows</option>
+          </select>
+          <h2>Players</h2>
+          <button onclick="addPlayer()">Add</button>
+          <ul id="playersList">
+          </ul>
 
-          <h2>doors</h2>
+          <h2>Doors</h2>
+          <ul id="doorsList">
+          </ul>
+
+          <h2>Platforms</h2>
+          <button onclick="addPlatform()">Add</button>
+          <ul id="platformsList">
+          </ul>
+          
 
           <h2>TileSet</h2>
 
