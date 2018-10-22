@@ -49,20 +49,24 @@ class gravityButton {
 			players.forEach(function(player) {
 				var coll = Tools.detectSpriteCollision(player,self);
 				if(coll.length > 0) {
-					console.log(self.mode);
-					self.pressed = true;
+					self.doPress(true);
+					
 					if(self.mode == 'up') grav = -0.5;
 					else grav = 0.5;
 					gravityButtons.forEach(function(g) {
-						if(self.mode  == g.mode) g.pressed = true;
-						else g.pressed = false;
+						if(self.mode  == g.mode) g.doPress(true);
+						else g.doPress(false);
 					})
 				}
 		    })
 	    }
 	}; //end update
 
-
+	doPress(isPressed) {
+		this.pressed = isPressed;
+		if(isPressed) this.bounding = this.boundingPressed;
+		else this.bounding = this.boundingNotPressed;
+	}
 
 	render() {
 

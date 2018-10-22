@@ -165,8 +165,8 @@ window.onload = function() {
 			    playerIndex*24,
 			    24,
 			    24,
-			    evt.offsetX-24/2,
-			    evt.offsetY-24,
+			    tilePositionX-24/2,
+			    tilePositionY-24,
 			    24,
 			    24
 		    );
@@ -248,8 +248,8 @@ window.onload = function() {
 			newPlatformIndex = -1;
 		}
 		if(mode == 'playerPosition') {
-			mapData.players[playerIndex].x = evt.offsetX;
-			mapData.players[playerIndex].y= evt.offsetY;
+			mapData.players[playerIndex].x = tilePositionX;
+			mapData.players[playerIndex].y= tilePositionY;
 			mode = '';
 			$('#mode').html('');
 			$('#instruction').html('');
@@ -269,7 +269,7 @@ window.onload = function() {
 			mode = '';
 			$('#mode').html('');
 			$('#instruction').html('');
-			doorIndex = -1;
+			gravityButtonIndex = -1;
 		}
 		reloadMap();
 	});
@@ -365,7 +365,7 @@ reloadMap = function() {
 
 	if(mapData.gravityButtons)  mapData.gravityButtons.forEach((elem,i) => {
 
-		if(mode == 'gravityButtonPosition' && i == doorIndex) return;
+		if(mode == 'gravityButtonPosition' && i == gravityButtonIndex) return;
 		let gravityButtonSpriteY = 0;
 		if(elem.mode == 'down') gravityButtonSpriteY += 32;
 		ctx.drawImage(
@@ -380,34 +380,6 @@ reloadMap = function() {
 		    32
 	    );
 	})
-
-	/*
-	console.log('drawing button');
-	ctx.drawImage(
-	    gravityButtonsImage,
-	    0,
-	    0,
-	    32,
-	    32,
-	    500,
-	    592-48,
-	    32,
-	    32
-    );
-
-    ctx.drawImage(
-	    gravityButtonsImage,
-	    64,
-	    0,
-	    32,
-	    32,
-	    200,
-	    16,
-	    32,
-	    32
-    );
-    */
-
 
 	reloadTools();
 }
@@ -519,7 +491,6 @@ reverseDoor = function(index) {
 
 
 addGravityButton = function(mode) {
-	console.log('adding button');
 	if(!mapData['gravityButtons']) mapData['gravityButtons'] = [];
 	mapData['gravityButtons'].push({x:-100,y:-100,mode:mode});
 	reloadMap();
