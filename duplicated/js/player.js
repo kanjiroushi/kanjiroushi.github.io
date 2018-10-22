@@ -26,8 +26,8 @@ class Player {
 	    this.spriteX = this.playerNum * 24;
 
 	    //We can reverse the left and right commands
-	    if(options.reverseCommands) this.reverseCommands = true;
-	    else this.reverseCommands = false;
+	    if(options.reverseCommand) this.reverseCommand = true;
+	    else this.reverseCommand = false;
 
 
 		this.onGround = false;
@@ -84,11 +84,11 @@ class Player {
 
 
 	    if(keysPressed.left) {
-	        if(this.reverseCommands) this.speed.x=2;
+	        if(this.reverseCommand) this.speed.x=2;
 	    	else this.speed.x=-2;
 	    }
 	    if(keysPressed.right) {
-	        if(this.reverseCommands) this.speed.x=-2;
+	        if(this.reverseCommand) this.speed.x=-2;
 	    	else  this.speed.x=2; 
 	    }
 	    //on update la position du joueur avec la vitesse

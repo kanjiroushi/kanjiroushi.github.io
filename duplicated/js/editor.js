@@ -341,7 +341,7 @@ reloadTools = function() {
 
 		let selected="";
 		if(playerIndex == i) selected = ' selected';
-		$('#playersList').append('<li class="player'+i+selected+'"><span class="image" onclick="selectPlayer('+i+')"></span>rev commands:<input type="checkbox" '+checked+'></input><button onclick="deletePlayer('+i+')">-</button></span></li>');
+		$('#playersList').append('<li class="player'+i+selected+'"><span class="image" onclick="selectPlayer('+i+')"></span>rev commands:<input type="checkbox" '+checked+' onclick="reverseCommand('+i+')"></input><button onclick="deletePlayer('+i+')">-</button></span></li>');
 	})
 
 	$('#doorsList').html('');
@@ -430,3 +430,8 @@ testLevel = function() {
 	});
 }
 
+
+reverseCommand = function(index) {
+	let checked = $('.player'+index+' [type="checkbox"]').prop('checked');
+	mapData.players[index].reverseCommand = checked;
+}

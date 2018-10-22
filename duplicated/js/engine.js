@@ -157,7 +157,8 @@ reloadMap = function() {
 
     players = [];
     if(mapData.players) mapData.players.forEach((elem,i) => {
-        players.push(new Player({context:ctx,image:playerImage,playerNum:i,x:elem.x,y:elem.y}));
+        console.log(elem);
+        players.push(new Player({context:ctx,image:playerImage,playerNum:i,x:elem.x,y:elem.y,reverseCommand:elem.reverseCommand}));
     })
     doors = [];
     if(mapData.doors) mapData.doors.forEach((elem,i) => {
