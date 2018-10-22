@@ -9,6 +9,7 @@ const bh = 592;
 let plats=[];
 let players = [];
 let doors = [];
+let gravityButtons = [];
 
 let keysPressed = {
     left:false,
@@ -25,7 +26,8 @@ let doorsImage = new Image();
 doorsImage.src = "sprites/doors.png";
 let tiles = new Image();
 tiles.src = "sprites/tileset_grassAndDirt.png";
-
+let gravityButtonsImage = new Image();
+gravityButtonsImage.src = "sprites/gravity_button.png";
 
 let youWin = false;
 
@@ -34,7 +36,7 @@ mapData['tiles'] = [];
 mapData['platforms'] = [];
 mapData['players'] = [];
 mapData['doors'] = [];
-
+mapData['gravityButtons'] = [];
 
 
 loadDefaultLayout = function() {
@@ -86,6 +88,9 @@ function gameLoop() {
         doors.forEach(function(d) {
             d.update(players); 
         });
+        gravityButtons.forEach(function(g) {
+            g.update(players,gravityButtons); 
+        });
     }
     render();
 
@@ -125,6 +130,10 @@ function render() {
     doors.forEach(function(d) {
         d.render();
     });
+    //drawing gravity buttons
+    gravityButtons.forEach(function(g) {
+        g.render();
+    });
     //drawing players
     players.forEach(function(p) {
         p.render();
@@ -159,12 +168,15 @@ reloadMap = function() {
 
     players = [];
     if(mapData.players) mapData.players.forEach((elem,i) => {
-        console.log(elem);
         players.push(new Player({context:ctx,image:playerImage,playerNum:i,x:elem.x,y:elem.y,reverseCommand:elem.reverseCommand}));
     })
     doors = [];
     if(mapData.doors) mapData.doors.forEach((elem,i) => {
        doors.push(new Door({context:ctx,image:doorsImage,doorNum:i,x:elem.x,y:elem.y,reversed:elem.reversed}));
+    })
+    gravityButtons = [];
+    if(mapData.gravityButtons) mapData.gravityButtons.forEach((elem,i) => {
+       gravityButtons.push(new gravityButton({context:ctx,image:gravityButtonsImage,x:elem.x,y:elem.y,mode:elem.mode}));
     })
     gameLoop();
 }

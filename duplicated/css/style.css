@@ -218,3 +218,30 @@ width:100px;
 #tools #doorsList .door1 .image{background-position:0px -48px;}
 #tools #doorsList .door2 .image{background-position:0px -96px;}
 #tools #doorsList .door3 .image{background-position:0px -144px;}
+
+
+
+
+#tools #gravityButtonsList{
+margin:0;
+padding:0;
+font-size:8px;
+list-style: none;
+}
+#tools #gravityButtonsList li{
+margin:2px 0;
+display:inline-block;
+}
+#tools #gravityButtonsList .image{
+cursor:pointer;
+background:url(../sprites/gravity_button.png);
+width:32px;
+height:32px;
+display: inline-block;
+border-width:2px;
+border-style: solid;
+border-color:#EAEAEA;
+}
+#tools #gravityButtonsList .selected .image{border-color:#33CCCC;}
+#tools #gravityButtonsList .up .image{background-position:0px 0px;}
+#tools #gravityButtonsList .down .image{background-position:0px -32px;}

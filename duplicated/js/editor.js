@@ -26,6 +26,7 @@ mapData['tiles'] = [];
 mapData['platforms'] = [];
 mapData['players'] = [];
 mapData['doors'] = [];
+mapData['gravityButtons'] = [];
 
 
 //which mode currently in
@@ -33,21 +34,20 @@ mapData['doors'] = [];
 // newPlatform: drawing new platform on the map
 // playerPosition: set where player appears
 // doorPosition: set where door appears
+// gravityButtonPosition: set where gravity button displayed
 let mode = ''; 
 
 //tile mode
 let tileX = -1;
 let tileY = -1;
-
 //newPlatform mode
 let newPlatformIndex = -1;
-
 //playerPosition mode
 let playerIndex = -1;
-
-
 //doorPosition mode
 let doorIndex = -1;
+//gravityButtonPosition
+let gravityButtonIndex = -1;
 
 window.onload = function() {
     canv=document.getElementById("gc");
@@ -191,6 +191,25 @@ window.onload = function() {
 			    48
 		    );
 		}
+		if(mode == 'gravityButtonPosition') {
+			reloadMap();
+			let gravityButton = mapData['gravityButtons'][gravityButtonIndex];
+
+			let gravityButtonSpriteY = 0;
+			if(gravityButton.mode == 'down') gravityButtonSpriteY += 32;
+
+			ctx.drawImage(
+			    gravityButtonsImage,
+			    0,
+			    gravityButtonSpriteY,
+			    32,
+			    32,
+			    tilePositionX-32/2,
+			    tilePositionY-32,
+			    32,
+			    32
+		    );
+		}
 	 })
 	.mouseup(function(evt) {
 	    isDragging = false;
@@ -239,6 +258,14 @@ window.onload = function() {
 		if(mode == 'doorPosition') {
 			mapData.doors[doorIndex].x = tilePositionX;
 			mapData.doors[doorIndex].y= tilePositionY;
+			mode = '';
+			$('#mode').html('');
+			$('#instruction').html('');
+			doorIndex = -1;
+		}
+		if(mode == 'gravityButtonPosition') {
+			mapData.gravityButtons[gravityButtonIndex].x = tilePositionX;
+			mapData.gravityButtons[gravityButtonIndex].y= tilePositionY;
 			mode = '';
 			$('#mode').html('');
 			$('#instruction').html('');
@@ -335,6 +362,25 @@ reloadMap = function() {
 	    );
 	})
 
+
+	if(mapData.gravityButtons)  mapData.gravityButtons.forEach((elem,i) => {
+
+		if(mode == 'gravityButtonPosition' && i == doorIndex) return;
+		let gravityButtonSpriteY = 0;
+		if(elem.mode == 'down') gravityButtonSpriteY += 32;
+		ctx.drawImage(
+		    gravityButtonsImage,
+		    0,
+		    gravityButtonSpriteY,
+		    32,
+		    32,
+		    elem.x-32/2,
+		    elem.y-32,
+		    32,
+		    32
+	    );
+	})
+
 	/*
 	console.log('drawing button');
 	ctx.drawImage(
@@ -390,6 +436,17 @@ reloadTools = function() {
 		let selected="";
 		if(doorIndex == i) selected = ' selected';
 		$('#doorsList').append('<li class="door'+i+selected+'"><span class="image" onclick="selectDoor('+i+')"></span>reversed:<input type="checkbox" '+checked+' onclick="reverseDoor('+i+')"></input></li>');
+	})
+
+	$('#gravityButtonsList').html('');
+	if(mapData.gravityButtons) mapData.gravityButtons.forEach((elem,i) => {
+		let mode=' down';
+		if(elem.mode == 'up') mode = ' up';
+
+		let selected="";
+		if(gravityButtonIndex == i) selected = ' selected';
+
+		$('#gravityButtonsList').append('<li class="gravityButton'+i+selected+mode+'"><span class="image" onclick="selectGravityButton('+i+')"></span><button onclick="deleteGravityButton('+i+')">-</button></li>');
 	})
 }
 
@@ -449,6 +506,35 @@ selectDoor = function(index) {
 
 
 
+reverseCommand = function(index) {
+	let checked = $('.player'+index+' [type="checkbox"]').prop('checked');
+	mapData.players[index].reverseCommand = checked;
+}
+
+reverseDoor = function(index) {
+	let checked = $('.door'+index+' [type="checkbox"]').prop('checked');
+	mapData.doors[index].reversed = checked;
+	reloadMap();
+}
+
+
+addGravityButton = function(mode) {
+	console.log('adding button');
+	if(!mapData['gravityButtons']) mapData['gravityButtons'] = [];
+	mapData['gravityButtons'].push({x:-100,y:-100,mode:mode});
+	reloadMap();
+}
+
+selectGravityButton = function(index) {
+	mode = 'gravityButtonPosition';
+	$('#mode').html(mode);
+	$('#instruction').html('click on the map to select where gravity button is displayed');
+	gravityButtonIndex = index;
+	reloadMap();
+}
+
+
+
 
 
 
@@ -469,16 +555,4 @@ testLevel = function() {
 		console.log(encodedData);
 		window.open('index.html?data='+encodedData, '_blank');
 	});
-}
-
-
-reverseCommand = function(index) {
-	let checked = $('.player'+index+' [type="checkbox"]').prop('checked');
-	mapData.players[index].reverseCommand = checked;
-}
-
-reverseDoor = function(index) {
-	let checked = $('.door'+index+' [type="checkbox"]').prop('checked');
-	mapData.doors[index].reversed = checked;
-	reloadMap();
 }

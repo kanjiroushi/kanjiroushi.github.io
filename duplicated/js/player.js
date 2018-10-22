@@ -121,7 +121,7 @@ class Player {
 	        
 	        //on the ground
 	        if(coll.includes('bottomRight') && coll.includes('bottomLeft')) {
-	        	console.log('on the ground');
+//	        	console.log('on the ground');
 	        	//looking down
 	        	if(grav > 0) {
 		        	this.y=plat.y;
@@ -139,7 +139,7 @@ class Player {
 	        }
 	        //hit the top
 	        if(coll.includes('topRight') && coll.includes('topLeft')) {
-	        	console.log('hit the top');
+//	        	console.log('hit the top');
 	        	if(grav > 0) {
 	        		this.y=plat.y+plat.h+this.bounding.h+1;
 	            	this.speed.y=0;
@@ -152,7 +152,7 @@ class Player {
 	        }
 	        //hit the platform with the head at an angle
 	        if(coll.length ==1 && (coll.includes('topRight') || coll.includes('topLeft'))) {
-	        	console.log('hit the top at an angle');
+//	        	console.log('hit the top at an angle');
 	        	if(grav > 0) {
 	        		this.y=plat.y+plat.h+this.bounding.h+1;
 	        		if(this.speed.y < 0) this.speed.y = 0;
