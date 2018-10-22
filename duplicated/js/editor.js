@@ -153,6 +153,14 @@ window.onload = function() {
 			let width = pixelX - mapData['platforms'][newPlatformIndex].x;
 			let height = pixelY - mapData['platforms'][newPlatformIndex].y;
 
+			if(width <= 0) {
+				mapData['platforms'][newPlatformIndex].x = posX*16;
+				width = 16;
+			}
+			if(height <= 0) {
+				mapData['platforms'][newPlatformIndex].y = posY*16;
+				width = 16;
+			}
 			mapData['platforms'][newPlatformIndex].w = width;
 			mapData['platforms'][newPlatformIndex].h = height;
 			reloadMap();
@@ -322,8 +330,15 @@ reloadMap = function() {
 	mapData.tiles.forEach(elem => {
 		ctx.drawImage(tiles,elem.tileX*16,elem.tileY*16,16,16,elem.posX*16,elem.posY*16,16,16);
 	})
-	ctx.strokeStyle = "black";
-	if(mapData.platforms) mapData.platforms.forEach(elem => {
+	
+	if(mapData.platforms) mapData.platforms.forEach((elem,i) => {
+		if(i == newPlatformIndex) {
+			ctx.strokeStyle = "#FF3333";
+			ctx.lineWidth = 3;
+		} else {
+			ctx.strokeStyle = "#000000";
+			ctx.lineWidth = 1;
+		}
 		ctx.beginPath();
 		ctx.rect(elem.x,elem.y,elem.w,elem.h);
 		ctx.stroke();
@@ -387,7 +402,7 @@ reloadMap = function() {
 reloadTools = function() {
 	$('#platformsList').html('');
 	if(mapData.platforms) mapData.platforms.forEach((elem,i) => {
-		$('#platformsList').append('<li>x:'+elem.x+' y:'+elem.y+' w:'+elem.w+' h:'+elem.h+'<button onclick="deletePlatform('+i+')">-</button></li>');
+		$('#platformsList').append('<li index="'+i+'">x:'+elem.x+' y:'+elem.y+' w:'+elem.w+' h:'+elem.h+'<button onclick="deletePlatform('+i+')">-</button></li>');
 	})
 
 	$('#playersList').html('');
@@ -507,6 +522,10 @@ selectGravityButton = function(index) {
 
 
 
+$(document).on('mouseenter','#platformsList li',function() {
+	newPlatformIndex = parseInt($(this).attr('index'));
+	reloadMap();
+})
 
 
 
