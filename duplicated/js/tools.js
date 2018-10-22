@@ -2,22 +2,37 @@ class Tools {
 
 
 	static detectPlatformCollision(player,platform) {
+
+		let collidePixels = [];
 	    //On detecte si aucune collision
+
 	    if((player.x+player.bounding.w/2) < platform.x ) return [];
-	    if((player.x-player.bounding.w/2) > (platform.x+platform.w) ) return [];
-	    if((player.y-player.bounding.h) > (platform.y+platform.h) ) return [];
-	    if(player.y < platform.y) return [];
+		if((player.x-player.bounding.w/2) > (platform.x+platform.w) ) return [];
+
+	    if(grav > 0) {
+		    if((player.y-player.bounding.h) > (platform.y+platform.h) ) return [];
+		    if(player.y < platform.y) return [];
 
 
-	    //We check for the 6 pixels if they collide
-	    let collidePixels = [];
-	    collidePixels.push({id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y});
-	    collidePixels.push({id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y});
-	    collidePixels.push({id:'middleRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h/2});
-	    collidePixels.push({id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h/2});
-	    collidePixels.push({id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h});
-	    collidePixels.push({id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h});
+		    //We check for the 6 pixels if they collide
+		    collidePixels.push({id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y});
+		    collidePixels.push({id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y});
+		    collidePixels.push({id:'middleRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h/2});
+		    collidePixels.push({id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h/2});
+		    collidePixels.push({id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h});
+		    collidePixels.push({id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h});
+	    } else {
+		    if((player.y-player.h+player.bounding.h) < platform.y ) return [];
+		    if((player.y-player.h) > (platform.y+platform.h)) return [];
 
+		    //We check for the 6 pixels if they collide
+		    collidePixels.push({id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y-player.h});
+		    collidePixels.push({id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y-player.h});
+		    collidePixels.push({id:'middleRight',x:player.x+player.bounding.w/2,y:player.y-player.h+player.bounding.h/2});
+		    collidePixels.push({id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.h+player.bounding.h/2});
+		    collidePixels.push({id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.h+player.bounding.h});
+		    collidePixels.push({id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.h+player.bounding.h});
+	    }
 	    let colliding = [];
 
 	    collidePixels.forEach(function(pix) {
@@ -28,7 +43,6 @@ class Tools {
 	    		pix.y <= (platform.y+platform.h)
 	    	) colliding.push(pix.id);
 	    })
-
 	    return colliding;
 	}
 
@@ -37,20 +51,48 @@ class Tools {
 	    //On detecte si aucune collision
 	    if((player.x+player.bounding.w/2) < (sprite.x-sprite.bounding.w/2)) return [];
 	    if((player.x-player.bounding.w/2) > (sprite.x+sprite.bounding.w/2) ) return [];
-	    if((player.y-player.bounding.h) > sprite.y ) return [];
-	    if(player.y < sprite.y-sprite.bounding.h) return [];
+	    
 
 
 	    //We check for the 7 pixels if they collide
 	    //each corner plus middle of sprite + center
 	    let collidePixels = [];
-	    collidePixels.push({id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y});
-	    collidePixels.push({id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y});
-	    collidePixels.push({id:'middleRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h/2});
-	    collidePixels.push({id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h/2});
-	    collidePixels.push({id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h});
-	    collidePixels.push({id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h});
-	    collidePixels.push({id:'center',x:player.x,y:player.y-player.bounding.h/2});
+	    let spriteTop = sprite.y- sprite.bounding.h;
+	    let spriteBottom = sprite.y;
+	    if(grav > 0) {
+
+	    	//player under the sprite
+	    	if((player.y-player.bounding.h) > sprite.y ) return [];
+	    	//player on top of the sprite
+	    	if(player.y < sprite.y-sprite.bounding.h) return [];
+
+		    collidePixels.push({id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y});
+		    collidePixels.push({id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y});
+		    collidePixels.push({id:'middleRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h/2});
+		    collidePixels.push({id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h/2});
+		    collidePixels.push({id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h});
+		    collidePixels.push({id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h});
+		    collidePixels.push({id:'center',x:player.x,y:player.y-player.bounding.h/2});
+
+
+		} else {
+			//player under the sprite (inverted gravity)
+			if((player.y-player.h+player.bounding.h) < (sprite.y-sprite.h)) return [];
+			//player on top of the sprite (inverted gravity)
+	    	if((player.y-player.h) > (sprite.y-sprite.h+sprite.bounding.h)) return [];
+
+			collidePixels.push({id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y-player.h});
+		    collidePixels.push({id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y-player.h});
+		    collidePixels.push({id:'middleRight',x:player.x+player.bounding.w/2,y:player.y-player.h+player.bounding.h/2});
+		    collidePixels.push({id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.h+player.bounding.h/2});
+		    collidePixels.push({id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.h+player.bounding.h});
+		    collidePixels.push({id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.h+player.bounding.h});
+		    collidePixels.push({id:'center',x:player.x,y:player.y-player.h+player.bounding.h/2});
+
+		    //not real sprite top due to >=
+		    spriteTop = sprite.y - sprite.h;
+	    	spriteBottom = sprite.y - sprite.h+sprite.bounding.h;
+		}
 
 	    let colliding = [];
 
@@ -58,8 +100,8 @@ class Tools {
 	    	if(
 	    		pix.x >= (sprite.x- sprite.bounding.w/2) && 
 	    		pix.x <= (sprite.x+ sprite.bounding.w/2) && 
-	    		pix.y >= (sprite.y- sprite.bounding.h) && 
-	    		pix.y <= sprite.y
+	    		pix.y >= spriteTop && 
+	    		pix.y <= spriteBottom
 	    	) colliding.push(pix.id);
 	    })
 

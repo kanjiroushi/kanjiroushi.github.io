@@ -119,8 +119,7 @@ function render() {
     }
 
 
-    //You win board
-    if(youWin) ctx.drawImage(youWinBoard,0,0,300,250,(800-300)/2,0,300,250);
+   
 
     //drawing doors
     doors.forEach(function(d) {
@@ -130,6 +129,9 @@ function render() {
     players.forEach(function(p) {
         p.render();
     });
+
+     //You win board
+    if(youWin) ctx.drawImage(youWinBoard,0,0,300,250,(800-300)/2,0,300,250);
 
 }
 
@@ -162,7 +164,7 @@ reloadMap = function() {
     })
     doors = [];
     if(mapData.doors) mapData.doors.forEach((elem,i) => {
-       doors.push(new Door({context:ctx,image:doorsImage,doorNum:i,x:elem.x,y:elem.y}));
+       doors.push(new Door({context:ctx,image:doorsImage,doorNum:i,x:elem.x,y:elem.y,reversed:elem.reversed}));
     })
     gameLoop();
 }

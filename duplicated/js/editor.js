@@ -15,6 +15,9 @@ playerImage.src = "sprites/player.png";
 let doorsImage = new Image();
 doorsImage.src = "sprites/doors.png";
 
+let gravityButtonsImage = new Image();
+gravityButtonsImage.src = "sprites/gravity_button.png";
+
 var isDragging = false;
 
 
@@ -171,10 +174,15 @@ window.onload = function() {
 
 		if(mode == 'doorPosition') {
 			reloadMap();
+			let door = mapData['doors'][doorIndex];
+
+			let doorSpriteY = doorIndex*48;
+			if(door.reversed) doorSpriteY += 4*48;
+
 			ctx.drawImage(
 			    doorsImage,
 			    0,
-			    doorIndex*48,
+			    doorSpriteY,
 			    48,
 			    48,
 			    tilePositionX-48/2,
@@ -259,7 +267,7 @@ window.onload = function() {
 	if(data && data.length > 0) {
 		var zip = new JSZip();
 
-		let rawZip = decodeDataFromUrl(data);
+		let rawZip = Tools.decodeDataFromUrl(data);
 		zip.loadAsync(rawZip).then(function (read) {
 	        zip.file("data.json").async("string").then((data) => {
 	        	mapData = JSON.parse(data);
@@ -312,10 +320,12 @@ reloadMap = function() {
 	if(mapData.doors) mapData.doors.forEach((elem,i) => {
 
 		if(mode == 'doorPosition' && i == doorIndex) return;
+		let doorSpriteY = i*48;
+		if(elem.reversed) doorSpriteY += 4*48;
 		ctx.drawImage(
 		    doorsImage,
 		    0,
-		    i*48,
+		    doorSpriteY,
 		    48,
 		    48,
 		    elem.x-48/2,
@@ -324,6 +334,34 @@ reloadMap = function() {
 		    48
 	    );
 	})
+
+	/*
+	console.log('drawing button');
+	ctx.drawImage(
+	    gravityButtonsImage,
+	    0,
+	    0,
+	    32,
+	    32,
+	    500,
+	    592-48,
+	    32,
+	    32
+    );
+
+    ctx.drawImage(
+	    gravityButtonsImage,
+	    64,
+	    0,
+	    32,
+	    32,
+	    200,
+	    16,
+	    32,
+	    32
+    );
+    */
+
 
 	reloadTools();
 }
@@ -346,9 +384,12 @@ reloadTools = function() {
 
 	$('#doorsList').html('');
 	if(mapData.doors) mapData.doors.forEach((elem,i) => {
+		let checked="";
+		if(elem.reversed) checked = ' checked';
+
 		let selected="";
 		if(doorIndex == i) selected = ' selected';
-		$('#doorsList').append('<li class="door'+i+selected+'"><span class="image" onclick="selectDoor('+i+')"></span></li>');
+		$('#doorsList').append('<li class="door'+i+selected+'"><span class="image" onclick="selectDoor('+i+')"></span>reversed:<input type="checkbox" '+checked+' onclick="reverseDoor('+i+')"></input></li>');
 	})
 }
 
@@ -377,7 +418,7 @@ addPlayer = function() {
 	if(mapData.players.length ==4) return;
 
 	mapData.players.push({x:-100,y:-100,reverseCommand:false});
-	mapData.doors.push({x:-100,y:-100});
+	mapData.doors.push({x:-100,y:-100,reversed:false});
 
 	mode = 'playerPosition';
 	$('#mode').html(mode);
@@ -434,4 +475,10 @@ testLevel = function() {
 reverseCommand = function(index) {
 	let checked = $('.player'+index+' [type="checkbox"]').prop('checked');
 	mapData.players[index].reverseCommand = checked;
+}
+
+reverseDoor = function(index) {
+	let checked = $('.door'+index+' [type="checkbox"]').prop('checked');
+	mapData.doors[index].reversed = checked;
+	reloadMap();
 }

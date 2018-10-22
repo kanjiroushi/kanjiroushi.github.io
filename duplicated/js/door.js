@@ -11,7 +11,8 @@ class Door {
 	    this.y = options.y || 200;
 
 
-	    this.spriteX = this.doorNum * 48;
+	    if(options.reversed) this.spriteX = this.doorNum * 48 + 4 * 48;
+	    else this.spriteX = this.doorNum * 48;
 
 	    this.w=48; //sprite size
 	    this.h=48; //sprite size

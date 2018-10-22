@@ -24,7 +24,6 @@ class Player {
 
 
 	    this.spriteX = this.playerNum * 24;
-
 	    //We can reverse the left and right commands
 	    if(options.reverseCommand) this.reverseCommand = true;
 	    else this.reverseCommand = false;
@@ -76,10 +75,15 @@ class Player {
 	    //si on se déplace à gauche ou à droite on change la vitesse
 
 	    if(keysPressed.up && this.onGround) {
-	        this.speed.y = -10;
+	        if(grav > 0) this.speed.y = -10;
+	        else this.speed.y = 10; 
 	    }
-	    if(!keysPressed.up && this.speed.y<-3) {
+	    //stop pressing, we set the y speed
+	    if(grav > 0 && !keysPressed.up && this.speed.y<-3) {
 	        this.speed.y=-3;
+	    }
+	    if(grav < 0 && !keysPressed.up && this.speed.y>3) {
+	        this.speed.y=3;
 	    }
 
 
@@ -112,32 +116,62 @@ class Player {
 	    platforms.forEach(plat => {
 
 	        let coll = Tools.detectPlatformCollision(this,plat);
-
 	        if(coll.length === 0) return;
 
+	        
 	        //on the ground
 	        if(coll.includes('bottomRight') && coll.includes('bottomLeft')) {
-	        	this.y=plat.y;
-	            this.onGround=true;
-	            this.onGroundPlatform=plat.id;
-	            this.speed.y = 0;
-	            return;
+	        	console.log('on the ground');
+	        	//looking down
+	        	if(grav > 0) {
+		        	this.y=plat.y;
+		            this.onGround=true;
+		            this.onGroundPlatform=plat.id;
+		            this.speed.y = 0;
+		            return;
+	            } else {
+	            	this.y=plat.y+plat.h+this.h;
+		            this.onGround=true;
+		            this.onGroundPlatform=plat.id;
+		            this.speed.y = 0;
+		            return;
+	            }
 	        }
 	        //hit the top
 	        if(coll.includes('topRight') && coll.includes('topLeft')) {
-	        	this.y=plat.y+plat.h+this.bounding.h+1;
-	            this.speed.y=0;
-	            return;
+	        	console.log('hit the top');
+	        	if(grav > 0) {
+	        		this.y=plat.y+plat.h+this.bounding.h+1;
+	            	this.speed.y=0;
+	            	return;
+	            } else {
+	            	this.y=plat.y+this.h-this.bounding.h-1;
+	            	this.speed.y=0;
+	            	return;
+	            }
 	        }
-	        //hit the platform at an angle
+	        //hit the platform with the head at an angle
 	        if(coll.length ==1 && (coll.includes('topRight') || coll.includes('topLeft'))) {
-	        	this.y=plat.y+plat.h+this.bounding.h+1;
-	        	if(this.speed.y < 0) this.speed.y = 0;
-	            return;
+	        	console.log('hit the top at an angle');
+	        	if(grav > 0) {
+	        		this.y=plat.y+plat.h+this.bounding.h+1;
+	        		if(this.speed.y < 0) this.speed.y = 0;
+	            	return;
+	            } else {
+	            	this.y=plat.y+this.h-this.bounding.h-1;
+	            	if(this.speed.y > 0) this.speed.y=0;
+	            	return;
+	            }
 	        }
+	        //hit the ground at an angle, we don t allow him to jump already but allow to stay on the platform
 	        if(coll.length ==1 && (coll.includes('bottomRight') || coll.includes('bottomLeft'))) {
-	        	this.y=plat.y;
-	            return;
+	        	if(grav > 0) {
+	        		this.y=plat.y;
+	            	return;
+	            } else {
+	            	this.y=plat.y+plat.h+this.h;
+	            	return;
+	            }
 	        }
 	        //If the middle of the player hit, it is against the wall
 	        if(coll.includes('middleRight')) {
@@ -197,6 +231,9 @@ class Player {
 		let reverseSprite = 0;
 		if(this.speed.x < 0) reverseSprite = 9;
 
+		//gravity reversal
+		if(grav < 0) this.finalX = this.spriteX + 24*4;
+		else this.finalX = this.spriteX;
 
 		if(this.onGround && Math.abs(this.speed.x) <0.1) {
 			//idle
@@ -205,7 +242,7 @@ class Player {
 			this.context.drawImage(
 			    this.image,
 			    (this.frameIndex+reverseSprite)* this.w,
-			    this.spriteX,
+			    this.finalX,
 			    this.w,
 			    this.h,
 			    this.x-this.w/2,
@@ -218,7 +255,7 @@ class Player {
 			this.context.drawImage(
 			    this.image,
 			    (this.frameIndex+reverseSprite) * this.w,
-			    this.spriteX,
+			    this.finalX,
 			    this.w,
 			    this.h,
 			    this.x-this.w/2,
@@ -231,7 +268,7 @@ class Player {
 			this.context.drawImage(
 			    this.image,
 			    (this.frameIndex+reverseSprite) * this.w,
-			    this.spriteX,
+			    this.finalX,
 			    this.w,
 			    this.h,
 			    this.x-this.w/2,
