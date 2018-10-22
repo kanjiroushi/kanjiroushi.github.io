@@ -1,7 +1,12 @@
 let grav=0.5;
 
+// game width
+const bw = 800;
+// game height
+const bh = 592;
 
-let plat=[];
+
+let plats=[];
 let players = [];
 let doors = [];
 
@@ -11,141 +16,63 @@ let keysPressed = {
     up:false,
 }
 
-let background = new Image();
-background.src = "testbg.png";
 
 let youWinBoard = new Image();
 youWinBoard.src = "sprites/youWinBoard.png";
+let playerImage = new Image();
+playerImage.src = "sprites/player.png";
+let doorsImage = new Image();
+doorsImage.src = "sprites/doors.png";
+let tiles = new Image();
+tiles.src = "sprites/tileset_grassAndDirt.png";
+
 
 let youWin = false;
 
+let mapData = {};
+mapData['tiles'] = [];
+mapData['platforms'] = [];
+mapData['players'] = [];
+mapData['doors'] = [];
+
+
+
+loadDefaultLayout = function() {
+    $.getJSON( "layouts/twowindowshorizontal.json", function(data) {
+        mapData = data;
+        reloadMap();
+    })
+}
+
 
 window.onload=function() {
-    canv=document.getElementById("gc");
-    ctx=canv.getContext("2d");
+    canv = document.getElementById("gc");
+    ctx = canv.getContext("2d");
     
-
-
-    canv.addEventListener('click', evt => {
-       console.log('canvas click',evt.layerX,evt.layerY);
-    });
-
-    playerImage = new Image();
-
-    players.push(new Player({context:ctx,image:playerImage,playerNum:0,x:100,y:450}));
-    players.push(new Player({context:ctx,image:playerImage,playerNum:1,x:700,y:450}));
-    //players.push(new Player({context:ctx,image:playerImage,playerNum:2,x:300,y:100}));
-    //players.push(new Player({context:ctx,image:playerImage,playerNum:3,x:500,y:100}));
-
-    playerImage.addEventListener("load", gameLoop);
-    playerImage.src = "sprites/player.png";
-
-
-    doorsImage = new Image();
     
-    doors.push(new Door({context:ctx,image:doorsImage,doorNum:0,x:403,y:canv.height-128}));
-    doors.push(new Door({context:ctx,image:doorsImage,doorNum:1,x:600,y:canv.height-32}));
-    //doors.push(new Door({context:ctx,image:doorsImage,doorNum:2,x:403,y:268}));
-    //doors.push(new Door({context:ctx,image:doorsImage,doorNum:3,x:600,y:268}));
-    doorsImage.src = "sprites/doors.png";
-
-
-
     //some listener on key press and keey release
     document.addEventListener("keydown",keyDown);
     document.addEventListener("keyup",keyUp);
 
-//    window.addEventListener("mousemove",mouseMove)
-    //time to draw the background
-    //le sol
-    plat.push(
-        {
-        id:'solBas',
-        type:'bg',
-        x:0,
-        y:canv.height-32,
-        w:canv.width,
-        h:32
-        }
-    );
-    //deuxième sol
-    plat.push(
-        {
-        id:'solHaut',
-        type:'bg',
-        x:0,
-        y:300-32,
-        w:canv.width,
-        h:64
-        }
-    );
-    plat.push(
-        {
-        id:'plafond',
-        type:'bg',
-        x:0,
-        y:0,
-        w:canv.width,
-        h:32
-        }
-    );
-    //mur gauche
-    plat.push(
-        {
-        id:'murGauche',
-        type:'bg',
-        x:0,
-        y:0,
-        w:32,
-        h:canv.height
-        }
-    );
-    //mur droit
-    plat.push(
-        {
-        id:'murDroit',
-        type:'bg',
-        x:canv.width - 32,
-        y:0,
-        w:32,
-        h:canv.height
-        }
-    );
-    plat.push(
-        {
-        id:'testBlock',
-        type:'platform',
-        x:64*4,
-        y:canv.height-64,
-        w:64,
-        h:32
-        }
-    );
+
+    //test transfer data via url
+    var url = new URL(window.location.href);
+    var data = url.searchParams.get("data");
+
+    if(data && data.length > 0) {
+        var zip = new JSZip();
+
+        let rawZip = Tools.decodeDataFromUrl(data);
+        zip.loadAsync(rawZip).then(function (read) {
+            zip.file("data.json").async("string").then((data) => {
+                mapData = JSON.parse(data);
+                reloadMap();
+            })
+        });
+    } else loadDefaultLayout();
 
 
-    plat.push(
-        {
-        id:'testBlock',
-        type:'platform',
-        x:64*6,
-        y:canv.height-64*2,
-        w:64*3,
-        h:32
-        }
-    );
-
-
-    plat.push(
-        {
-        id:'testBlock',
-        type:'platform',
-        x:64*7,
-        y:268-32,
-        w:64,
-        h:32
-        }
-    );
-
+    
 }
 
 //gameLoop the page
@@ -154,7 +81,7 @@ function gameLoop() {
 
     if(!youWin) {
         players.forEach(function(p) {
-            p.update(keysPressed,plat,players); 
+            p.update(keysPressed,plats,players); 
         });
         doors.forEach(function(d) {
             d.update(players); 
@@ -180,8 +107,17 @@ function gameLoop() {
 
 
 function render() {
-    //drawing background
-    ctx.drawImage(background,0,0);
+
+    //We draw the tiles
+    ctx.clearRect(0, 0, bw, bh);
+    ctx.fillStyle="#67B0CF";
+    ctx.fillRect(0,0,bw,bh);
+    if(mapData && mapData.tiles) {
+        mapData.tiles.forEach(elem => {
+            ctx.drawImage(tiles,elem.tileX*16,elem.tileY*16,16,16,elem.posX*16,elem.posY*16,16,16);
+        });
+    }
+
 
     //You win board
     if(youWin) ctx.drawImage(youWinBoard,0,0,300,250,(800-300)/2,0,300,250);
@@ -195,16 +131,45 @@ function render() {
         p.render();
     });
 
-    
-
-    //dessine les plateformes
-    ctx.fillStyle="black";
-    for(i=0;i<plat.length;i++) {
-        if(plat[i].type == 'bg') continue;
-        ctx.fillRect(plat[i].x,plat[i].y,plat[i].w,plat[i].h);
-    }
-
 }
+
+
+
+
+
+
+
+reloadMap = function() {
+    
+    plats = [];
+    if(mapData.platforms) mapData.platforms.forEach(elem => {
+        plats.push(
+            {
+            id:'test',
+            type:'bg',
+            x:elem.x,
+            y:elem.y,
+            w:elem.w,
+            h:elem.h
+            }
+        );
+    })
+
+    players = [];
+    if(mapData.players) mapData.players.forEach((elem,i) => {
+        players.push(new Player({context:ctx,image:playerImage,playerNum:i,x:elem.x,y:elem.y}));
+    })
+    doors = [];
+    if(mapData.doors) mapData.doors.forEach((elem,i) => {
+       doors.push(new Door({context:ctx,image:doorsImage,doorNum:i,x:elem.x,y:elem.y}));
+    })
+    gameLoop();
+}
+
+
+
+
+
 
 function keyDown(evt) {
     switch(evt.keyCode) {

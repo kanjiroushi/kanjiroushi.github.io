@@ -331,7 +331,7 @@ reloadMap = function() {
 reloadTools = function() {
 	$('#platformsList').html('');
 	if(mapData.platforms) mapData.platforms.forEach((elem,i) => {
-		$('#platformsList').append('<li>x:'+elem.x+' y:'+elem.y+'<br />w:'+elem.w+' h:'+elem.h+'<button onclick="deletePlatform('+i+')">-</button></li>');
+		$('#platformsList').append('<li>x:'+elem.x+' y:'+elem.y+' w:'+elem.w+' h:'+elem.h+'<button onclick="deletePlatform('+i+')">-</button></li>');
 	})
 
 	$('#playersList').html('');
@@ -341,14 +341,14 @@ reloadTools = function() {
 
 		let selected="";
 		if(playerIndex == i) selected = ' selected';
-		$('#playersList').append('<li class="player'+i+selected+'"><span class="image" onclick="selectPlayer('+i+')"></span><span class="data">x:'+elem.x+' y:'+elem.y+'<br />rev commands:<input type="checkbox" '+checked+'></input><button onclick="deletePlayer('+i+')">-</button></span></li>');
+		$('#playersList').append('<li class="player'+i+selected+'"><span class="image" onclick="selectPlayer('+i+')"></span>rev commands:<input type="checkbox" '+checked+'></input><button onclick="deletePlayer('+i+')">-</button></span></li>');
 	})
 
 	$('#doorsList').html('');
 	if(mapData.doors) mapData.doors.forEach((elem,i) => {
 		let selected="";
 		if(doorIndex == i) selected = ' selected';
-		$('#doorsList').append('<li class="door'+i+selected+'"><span class="image" onclick="selectDoor('+i+')"></span><span class="data">x:'+elem.x+' y:'+elem.y+'</span></li>');
+		$('#doorsList').append('<li class="door'+i+selected+'"><span class="image" onclick="selectDoor('+i+')"></span></li>');
 	})
 }
 
@@ -410,16 +410,7 @@ selectDoor = function(index) {
 
 
 
-//https://jsfiddle.net/magikMaker/7bjaT/
-encodeDataForURL = function (str){
-	str= window.btoa(str);
-    return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '@');
-}
 
-decodeDataFromUrl = function(str){
-    str = str.replace(/-/g, '+').replace(/_/g, '/').replace(/@/g, '=');
-    return window.atob(str); 
-}
 
 testLevel = function() {
 	$('#instruction').html('You may need to allow pop up windows');
@@ -433,9 +424,9 @@ testLevel = function() {
 	    }
 	})
 	.then(function(content) {
-		var encodedData = encodeDataForURL(content);
+		var encodedData = Tools.encodeDataForURL(content);
 		console.log(encodedData);
-		window.open('editor.html?data='+encodedData, '_blank');
+		window.open('index.html?data='+encodedData, '_blank');
 	});
 }
 

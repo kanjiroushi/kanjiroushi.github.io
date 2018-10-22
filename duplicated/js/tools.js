@@ -66,5 +66,16 @@ class Tools {
 	    return colliding;
 	}
 
+	//https://jsfiddle.net/magikMaker/7bjaT/
+	static encodeDataForURL(str){
+		str= window.btoa(str);
+	    return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '@');
+	}
+
+	static decodeDataFromUrl(str){
+	    str = str.replace(/-/g, '+').replace(/_/g, '/').replace(/@/g, '=');
+	    return window.atob(str); 
+	}
+
 }
 Tools.nbCollisionPoints = 7;
