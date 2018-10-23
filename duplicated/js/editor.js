@@ -402,7 +402,7 @@ reloadMap = function() {
 reloadTools = function() {
 	$('#platformsList').html('');
 	if(mapData.platforms) mapData.platforms.forEach((elem,i) => {
-		$('#platformsList').append('<li index="'+i+'">x:'+elem.x+' y:'+elem.y+' w:'+elem.w+' h:'+elem.h+'<button onclick="deletePlatform('+i+')">-</button></li>');
+		$('#platformsList').append('<li index="'+i+'"><span class="eye" index="'+i+'"></span>x:'+elem.x+' y:'+elem.y+' w:'+elem.w+' h:'+elem.h+'<button class="removePlatform" onclick="deletePlatform('+i+')">-</button></li>');
 	})
 
 	$('#playersList').html('');
@@ -522,12 +522,11 @@ selectGravityButton = function(index) {
 
 
 
-/*
-$(document).on('mouseenter','#platformsList li',function() {
+
+$(document).on('mouseover','.eye',function() {
 	newPlatformIndex = parseInt($(this).attr('index'));
 	reloadMap();
 })
-*/
 
 
 testLevel = function() {

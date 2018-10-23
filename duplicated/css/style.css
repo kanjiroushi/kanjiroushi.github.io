@@ -151,6 +151,18 @@ border-top:1px #000 solid;
 #tools #platformsList li{
 border-bottom:1px #000 solid;
 margin:2px 0;
+height: 16px;
+}
+
+#tools #platformsList .eye{
+width:10px;
+height:10px;
+background-color:#369;
+display: inline-block;
+margin-right: 3px;
+}
+#tools #platformsList .removePlatform{
+float:right;
 }
 
 #tools #playersList{
