@@ -187,30 +187,38 @@ reloadMap = function() {
 
 
 function keyDown(evt) {
+
+    console.log(evt.keyCode)
     switch(evt.keyCode) {
         //left
-        case 37:
+        case 37: //left arrow
+        case 81: //Q
             keysPressed.left = true;
             break;
         //up
-        case 38:
+        case 38: //up arrow
+        case 32: //spacebar
             keysPressed.up=true;
             break;
         //right
-        case 39:
+        case 39: //right arrow
+        case 68: //D
             keysPressed.right = true;
             break;
     }
 }
 function keyUp(evt) {
     switch(evt.keyCode) {
-        case 37:
+        case 37: //left arrow
+        case 81: //Q
             keysPressed.left=false;
             break;
-        case 38:
+        case 38: //up arrow
+        case 32: //spacebar
             keysPressed.up=false;
             break;
-        case 39:
+        case 39: //right arrow
+        case 68: //D
             keysPressed.right=false;
             break;
     }
