@@ -58,6 +58,9 @@ class Player {
 
 
 	update(keysPressed,platforms,players) {
+
+		let prevX = this.x;
+		let prevY = this.y;
 		//tick counter for animation
 	    this.tickCount += 1;
 	    if (this.tickCount > this.ticksPerFrame) {
@@ -100,10 +103,23 @@ class Player {
 	    this.y+=this.speed.y;
 	    //si au sol on applique un coef de friction
 	    if(this.onGround) {
-	        this.speed.x *= 0.8;
+	        this.speed.x *= 0.3;
 	    } else {
 	        this.speed.y += grav;
 	    }
+
+
+	    //terminal velocity
+	    if(grav > 0 && this.speed.y > 15 ) this.speed.y = 15;
+	    if(grav < 0 && this.speed.y < -15 ) this.speed.y = -15;
+
+	    //we don t exit
+	    if(this.x < 0) this.x = 16;
+	    if(this.x > bw) this.x = bw-16;
+
+	    if(this.y < 0) this.y = 16;
+	    if(this.y > bh) this.y = bh-16;
+
 
 	    //We round to the nearest pixel
 		this.x = Math.round(this.x);
@@ -111,6 +127,7 @@ class Player {
 
 
 		//We detect the collisions
+		let wasOnGround = this.onGround;
 		this.onGround=false;
 
 	    platforms.forEach(plat => {
@@ -165,13 +182,24 @@ class Player {
 	        }
 	        //hit the ground at an angle, we don t allow him to jump already but allow to stay on the platform
 	        if(coll.length ==1 && (coll.includes('bottomRight') || coll.includes('bottomLeft'))) {
+//	        	console.log('hit at angle','prev:'+prevY,'current:'+this.y,'plat:'+plat.y);
 	        	if(grav > 0) {
 	        		this.y=plat.y;
-	            	return;
+	        		//if it comes from the top we allow to stay on the platform
+	        		if(prevY < this.y) {
+	        			console.log('we kill the speed');
+	        			this.speed.y = 0;
+	            	}
 	            } else {
 	            	this.y=plat.y+plat.h+this.h;
-	            	return;
+
+	            	//if it comes from the top we allow to stay on the platform
+	        		if(prevY > this.y) this.speed.y = 0;
 	            }
+	            //we allo the user to be still on ground even with half of hitbox over the edge
+	            //usefull to allow the user to jump
+	            if(wasOnGround) this.onGround=true;
+	            return;
 	        }
 	        //If the middle of the player hit, it is against the wall
 	        if(coll.includes('middleRight')) {
