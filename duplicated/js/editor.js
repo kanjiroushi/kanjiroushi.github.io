@@ -447,6 +447,7 @@ addPlatform = function() {
 }
 
 deletePlatform = function(index) {
+	console.log('deleting platform');
 	mapData.platforms.splice(index,1);
 	reloadMap();
 }
@@ -521,12 +522,12 @@ selectGravityButton = function(index) {
 
 
 
-
+/*
 $(document).on('mouseenter','#platformsList li',function() {
 	newPlatformIndex = parseInt($(this).attr('index'));
 	reloadMap();
 })
-
+*/
 
 
 testLevel = function() {
