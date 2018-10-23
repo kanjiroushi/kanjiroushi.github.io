@@ -9,6 +9,15 @@ font-family: 'Press Start 2P', cursive;
 margin-bottom: 20px;
 }
 
+#scoreBoard{
+	padding:10px;
+	background-color:#333;
+	color:#FFF;
+}
+#scoreBoard > div{
+display:inline-block;
+}
+
 .centered{
 	width:800px;
 	margin:0 auto;

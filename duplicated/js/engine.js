@@ -5,6 +5,7 @@ const bw = 800;
 // game height
 const bh = 592;
 
+let frameNum = 0;
 
 let plats=[];
 let players = [];
@@ -79,9 +80,8 @@ window.onload=function() {
 
 //gameLoop the page
 function gameLoop() {
-    
-
     if(!youWin) {
+        frameNum++;
         players.forEach(function(p) {
             p.update(keysPressed,plats,players); 
         });
@@ -103,6 +103,11 @@ function gameLoop() {
     if(allDoorsActive) {
         youWin = true;
     }
+
+    let milliSeconds = parseInt(frameNum*1000/60);
+    let seconds = parseInt(milliSeconds/1000);
+    let mill = milliSeconds - 1000*seconds;
+    $('#scoreBoard .time').html(seconds+'.'+mill);
     //We request the next animation already
     window.requestAnimationFrame(gameLoop);
 
