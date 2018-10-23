@@ -9,6 +9,11 @@ font-family: 'Press Start 2P', cursive;
 margin-bottom: 20px;
 }
 
+.viewReplay{
+	float: right;
+	display:none;
+}
+
 #scoreBoard{
 	padding:10px;
 	background-color:#333;

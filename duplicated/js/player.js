@@ -77,26 +77,26 @@ class Player {
 	    //modification of position
 	    //si on se déplace à gauche ou à droite on change la vitesse
 
-	    if(keysPressed.up && this.onGround) {
+	    if(keysPressed.u && this.onGround) {
 	        if(grav > 0) this.speed.y = -10;
 	        else this.speed.y = 10; 
 	    }
 	    //stop pressing, we set the y speed
-	    if(grav > 0 && !keysPressed.up && this.speed.y<-3) {
+	    if(grav > 0 && !keysPressed.u && this.speed.y<-3) {
 	        this.speed.y=-3;
 	    }
-	    if(grav < 0 && !keysPressed.up && this.speed.y>3) {
+	    if(grav < 0 && !keysPressed.u && this.speed.y>3) {
 	        this.speed.y=3;
 	    }
 
 
-	    if(keysPressed.left) {
+	    if(keysPressed.l) {
 	        if(this.reverseCommand) this.speed.x=2;
 	    	else this.speed.x=-2;
 	    }
-	    if(keysPressed.right) {
+	    if(keysPressed.r) {
 	        if(this.reverseCommand) this.speed.x=-2;
-	    	else  this.speed.x=2; 
+	    	else this.speed.x=2; 
 	    }
 	    //on update la position du joueur avec la vitesse
 	    this.x+=this.speed.x;

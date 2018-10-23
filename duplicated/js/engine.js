@@ -13,11 +13,14 @@ let doors = [];
 let gravityButtons = [];
 
 let keysPressed = {
-    left:false,
-    right:false,
-    up:false,
+    l:false,
+    r:false,
+    u:false,
 }
 
+
+let replayStore = [];
+let doReplay = false;
 
 let youWinBoard = new Image();
 youWinBoard.src = "sprites/youWinBoard.png";
@@ -41,10 +44,7 @@ mapData['gravityButtons'] = [];
 
 
 loadDefaultLayout = function() {
-    $.getJSON( "layouts/twowindowshorizontal.json", function(data) {
-        mapData = data;
-        reloadMap();
-    })
+    
 }
 
 
@@ -62,26 +62,69 @@ window.onload=function() {
     var url = new URL(window.location.href);
     var data = url.searchParams.get("data");
 
-    if(data && data.length > 0) {
-        var zip = new JSZip();
+    var promisesPending = [];
 
+    ///////////////////////////////
+    //Load map
+    ///////////////////////////////
+    if(data && data.length > 0) {
+        let zip = new JSZip();
         let rawZip = Tools.decodeDataFromUrl(data);
-        zip.loadAsync(rawZip).then(function (read) {
-            zip.file("data.json").async("string").then((data) => {
-                mapData = JSON.parse(data);
-                reloadMap();
+        let promiseLoadMap = zip.loadAsync(rawZip).then(function (read) {
+            return zip.file("data.json").async("string");
+        }).then((data) => {
+            mapData = JSON.parse(data);
+            return Promise.resolve('mapLoaded');
+        });
+        promisesPending.push(promiseLoadMap);
+    } else {
+        //We load the default map
+        let promiseLoadMap = new Promise((resolve, reject) => {
+            $.getJSON( "layouts/twowindowshorizontal.json", function(data) {
+                mapData = data;
+                resolve('defaultMapLoaded');
             })
         });
-    } else loadDefaultLayout();
+        promisesPending.push(promiseLoadMap);
+    }
+
+    ///////////////////////////////
+    //replay functionality
+    ///////////////////////////////
+    var replay = url.searchParams.get("replay");
+    if(replay && replay.length > 0) {
+        var zip2 = new JSZip();
+        let replayData = Tools.decodeDataFromUrl(replay);
+        var promiseReplayData = zip2.loadAsync(replayData).then(function (read) {
+            return zip2.file("data.json").async("string");
+        }).then((data) => {
+            replayStore = JSON.parse(data);
+            doReplay = true;
+            return Promise.resolve('replayLoaded');
+        });
+        promisesPending.push(promiseReplayData);
+    }
 
 
-    
+    //We load the promises to start the game
+    Promise.all(promisesPending).then(function(values) {
+      console.log(values);
+      reloadMap();
+    });
+
 }
 
 //gameLoop the page
 function gameLoop() {
     if(!youWin) {
+        
+        if(doReplay) keysPressed = replayStore[frameNum];
+        else replayStore.push(Object.assign({}, keysPressed));
+
         frameNum++;
+
+
+
         players.forEach(function(p) {
             p.update(keysPressed,plats,players); 
         });
@@ -91,6 +134,8 @@ function gameLoop() {
         gravityButtons.forEach(function(g) {
             g.update(players,gravityButtons); 
         });
+    } else {
+        if(!doReplay) $('.viewReplay').css('display','inline-block');
     }
     render();
 
@@ -104,12 +149,17 @@ function gameLoop() {
         youWin = true;
     }
 
-    let milliSeconds = parseInt(frameNum*1000/60);
-    let seconds = parseInt(milliSeconds/1000);
-    let mill = milliSeconds - 1000*seconds;
-    $('#scoreBoard .time').html(seconds+'.'+mill);
+    if(!youWin) {
+        let milliSeconds = parseInt(frameNum*1000/60);
+        let seconds = parseInt(milliSeconds/1000);
+        let mill = milliSeconds - 1000*seconds;
+        $('#scoreBoard .time').html(seconds+'.'+mill);
+    }
+    
+
     //We request the next animation already
     window.requestAnimationFrame(gameLoop);
+    
 
 }
 
@@ -188,43 +238,66 @@ reloadMap = function() {
 
 
 
+function viewReplay() {
+    var zip = new JSZip();
+    zip.file("data.json", JSON.stringify(replayStore));
+    zip.generateAsync({
+        type:"string",
+        compression: "DEFLATE",
+        compressionOptions: {
+            level: 9
+        }
+    })
+    .then(function(content) {
+        var encodedReplay = Tools.encodeDataForURL(content);
 
+        var url = new URL(window.location.href);
+        var data = url.searchParams.get("data");
+
+        window.open('index.html?replay='+encodedReplay+'&data='+data, '_blank');
+    });
+}
 
 
 function keyDown(evt) {
 
-    console.log(evt.keyCode)
+    if(doReplay) return;
+
     switch(evt.keyCode) {
         //left
         case 37: //left arrow
         case 81: //Q
-            keysPressed.left = true;
+            keysPressed.l = true;
             break;
         //up
         case 38: //up arrow
         case 32: //spacebar
-            keysPressed.up=true;
+            keysPressed.u=true;
             break;
         //right
         case 39: //right arrow
         case 68: //D
-            keysPressed.right = true;
+            keysPressed.r = true;
             break;
     }
 }
 function keyUp(evt) {
+
+    if(doReplay) return;
+
+
     switch(evt.keyCode) {
         case 37: //left arrow
         case 81: //Q
-            keysPressed.left=false;
+            keysPressed.l=false;
             break;
         case 38: //up arrow
         case 32: //spacebar
-            keysPressed.up=false;
+            keysPressed.u=false;
             break;
         case 39: //right arrow
         case 68: //D
-            keysPressed.right=false;
+            keysPressed.r=false;
             break;
     }
 }
