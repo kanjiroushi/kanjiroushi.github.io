@@ -78,14 +78,14 @@ class Player {
 	    //si on se déplace à gauche ou à droite on change la vitesse
 
 	    if(keysPressed.u && this.onGround) {
-	        if(grav > 0) this.speed.y = -10;
+	        if(duplicated.grav > 0) this.speed.y = -10;
 	        else this.speed.y = 10; 
 	    }
 	    //stop pressing, we set the y speed
-	    if(grav > 0 && !keysPressed.u && this.speed.y<-3) {
+	    if(duplicated.grav > 0 && !keysPressed.u && this.speed.y<-3) {
 	        this.speed.y=-3;
 	    }
-	    if(grav < 0 && !keysPressed.u && this.speed.y>3) {
+	    if(duplicated.grav < 0 && !keysPressed.u && this.speed.y>3) {
 	        this.speed.y=3;
 	    }
 
@@ -105,20 +105,20 @@ class Player {
 	    if(this.onGround) {
 	        this.speed.x *= 0.3;
 	    } else {
-	        this.speed.y += grav;
+	        this.speed.y += duplicated.grav;
 	    }
 
 
 	    //terminal velocity
-	    if(grav > 0 && this.speed.y > 15 ) this.speed.y = 15;
-	    if(grav < 0 && this.speed.y < -15 ) this.speed.y = -15;
+	    if(duplicated.grav > 0 && this.speed.y > 15 ) this.speed.y = 15;
+	    if(duplicated.grav < 0 && this.speed.y < -15 ) this.speed.y = -15;
 
 	    //we don t exit
 	    if(this.x < 0) this.x = 16;
-	    if(this.x > bw) this.x = bw-16;
+	    if(this.x > duplicated.bw) this.x = duplicated.bw-16;
 
 	    if(this.y < 0) this.y = 16;
-	    if(this.y > bh) this.y = bh-16;
+	    if(this.y > duplicated.bh) this.y = duplicated.bh-16;
 
 
 	    //We round to the nearest pixel
@@ -140,7 +140,7 @@ class Player {
 	        if(coll.includes('bottomRight') && coll.includes('bottomLeft')) {
 //	        	console.log('on the ground');
 	        	//looking down
-	        	if(grav > 0) {
+	        	if(duplicated.grav > 0) {
 		        	this.y=plat.y;
 		            this.onGround=true;
 		            this.onGroundPlatform=plat.id;
@@ -157,7 +157,7 @@ class Player {
 	        //hit the top
 	        if(coll.includes('topRight') && coll.includes('topLeft')) {
 //	        	console.log('hit the top');
-	        	if(grav > 0) {
+	        	if(duplicated.grav > 0) {
 	        		this.y=plat.y+plat.h+this.bounding.h+1;
 	            	this.speed.y=0;
 	            	return;
@@ -170,7 +170,7 @@ class Player {
 	        //hit the platform with the head at an angle
 	        if(coll.length ==1 && (coll.includes('topRight') || coll.includes('topLeft'))) {
 //	        	console.log('hit the top at an angle');
-	        	if(grav > 0) {
+	        	if(duplicated.grav > 0) {
 	        		this.y=plat.y+plat.h+this.bounding.h+1;
 	        		if(this.speed.y < 0) this.speed.y = 0;
 	            	return;
@@ -183,7 +183,7 @@ class Player {
 	        //hit the ground at an angle, we don t allow him to jump already but allow to stay on the platform
 	        if(coll.length ==1 && (coll.includes('bottomRight') || coll.includes('bottomLeft'))) {
 //	        	console.log('hit at angle','prev:'+prevY,'current:'+this.y,'plat:'+plat.y);
-	        	if(grav > 0) {
+	        	if(duplicated.grav > 0) {
 	        		this.y=plat.y;
 	        		//if it comes from the top we allow to stay on the platform
 	        		if(prevY < this.y) {
@@ -260,7 +260,7 @@ class Player {
 		if(this.speed.x < 0) reverseSprite = 9;
 
 		//gravity reversal
-		if(grav < 0) this.finalX = this.spriteX + 24*4;
+		if(duplicated.grav < 0) this.finalX = this.spriteX + 24*4;
 		else this.finalX = this.spriteX;
 
 		if(this.onGround && Math.abs(this.speed.x) <0.1) {

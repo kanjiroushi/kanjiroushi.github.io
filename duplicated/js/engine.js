@@ -1,56 +1,57 @@
-let grav=0.5;
+//namespace
+let duplicated = {};
+
+duplicated.grav=0.5;
 
 // game width
-const bw = 800;
+duplicated.bw = 800;
 // game height
-const bh = 592;
+duplicated.bh = 592;
 
-let frameNum = 0;
+duplicated.frameNum = 0;
 
-let plats=[];
-let players = [];
-let doors = [];
-let gravityButtons = [];
+duplicated.plats=[];
+duplicated.players = [];
+duplicated.doors = [];
+duplicated.gravityButtons = [];
 
-let keysPressed = {
+duplicated.keysPressed = {
     l:false,
     r:false,
     u:false,
 }
 
-
-let replayStore = [];
-let doReplay = false;
-
-let youWinBoard = new Image();
-youWinBoard.src = "sprites/youWinBoard.png";
-let playerImage = new Image();
-playerImage.src = "sprites/player.png";
-let doorsImage = new Image();
-doorsImage.src = "sprites/doors.png";
-let tiles = new Image();
-tiles.src = "sprites/tileset_grassAndDirt.png";
-let gravityButtonsImage = new Image();
-gravityButtonsImage.src = "sprites/gravity_button.png";
-
-let youWin = false;
-
-let mapData = {};
-mapData['tiles'] = [];
-mapData['platforms'] = [];
-mapData['players'] = [];
-mapData['doors'] = [];
-mapData['gravityButtons'] = [];
+//replay
+duplicated.replayStore = [];
+duplicated.doReplay = false;
 
 
-loadDefaultLayout = function() {
-    
-}
+//assets 
+duplicated.assets = {};
+duplicated.assets.youWinBoard = new Image();
+duplicated.assets.youWinBoard.src = "sprites/youWinBoard.png";
+duplicated.assets.playerImage = new Image();
+duplicated.assets.playerImage.src = "sprites/player.png";
+duplicated.assets.doorsImage = new Image();
+duplicated.assets.doorsImage.src = "sprites/doors.png";
+duplicated.assets.tiles = new Image();
+duplicated.assets.tiles.src = "sprites/tileset_grassAndDirt.png";
+duplicated.assets.gravityButtonsImage = new Image();
+duplicated.assets.gravityButtonsImage.src = "sprites/gravity_button.png";
+
+duplicated.youWin = false;
+
+duplicated.mapData = {};
+duplicated.mapData['tiles'] = [];
+duplicated.mapData['platforms'] = [];
+duplicated.mapData['players'] = [];
+duplicated.mapData['doors'] = [];
+duplicated.mapData['gravityButtons'] = [];
 
 
 window.onload=function() {
     canv = document.getElementById("gc");
-    ctx = canv.getContext("2d");
+    duplicated.ctx = canv.getContext("2d");
     
     
     //some listener on key press and keey release
@@ -73,7 +74,7 @@ window.onload=function() {
         let promiseLoadMap = zip.loadAsync(rawZip).then(function (read) {
             return zip.file("data.json").async("string");
         }).then((data) => {
-            mapData = JSON.parse(data);
+            duplicated.mapData = JSON.parse(data);
             return Promise.resolve('mapLoaded');
         });
         promisesPending.push(promiseLoadMap);
@@ -81,7 +82,7 @@ window.onload=function() {
         //We load the default map
         let promiseLoadMap = new Promise((resolve, reject) => {
             $.getJSON( "layouts/twowindowshorizontal.json", function(data) {
-                mapData = data;
+                duplicated.mapData = data;
                 resolve('defaultMapLoaded');
             })
         });
@@ -98,8 +99,8 @@ window.onload=function() {
         var promiseReplayData = zip2.loadAsync(replayData).then(function (read) {
             return zip2.file("data.json").async("string");
         }).then((data) => {
-            replayStore = JSON.parse(data);
-            doReplay = true;
+            duplicated.replayStore = JSON.parse(data);
+            duplicated.doReplay = true;
             return Promise.resolve('replayLoaded');
         });
         promisesPending.push(promiseReplayData);
@@ -116,41 +117,46 @@ window.onload=function() {
 
 //gameLoop the page
 function gameLoop() {
-    if(!youWin) {
+    if(!duplicated.youWin) {
         
-        if(doReplay) keysPressed = replayStore[frameNum];
-        else replayStore.push(Object.assign({}, keysPressed));
+        
+        if(duplicated.doReplay) {
+            //if we are replaying, we set the keys to the store ones
+            duplicated.keysPressed = duplicated.replayStore[duplicated.frameNum];
+        } else {
+            //else we store the keys pressed in the replay store object
+            duplicated.replayStore.push(Object.assign({}, duplicated.keysPressed));
+        }
+        duplicated.frameNum++;
 
-        frameNum++;
 
 
-
-        players.forEach(function(p) {
-            p.update(keysPressed,plats,players); 
+        duplicated.players.forEach(function(p) {
+            p.update(duplicated.keysPressed,duplicated.plats,duplicated.players); 
         });
-        doors.forEach(function(d) {
-            d.update(players); 
+        duplicated.doors.forEach(function(d) {
+            d.update(duplicated.players); 
         });
-        gravityButtons.forEach(function(g) {
-            g.update(players,gravityButtons); 
+        duplicated.gravityButtons.forEach(function(g) {
+            g.update(duplicated.players,duplicated.gravityButtons); 
         });
     } else {
-        if(!doReplay) $('.viewReplay').css('display','inline-block');
+        if(!duplicated.doReplay) $('.viewReplay').css('display','inline-block');
     }
     render();
 
 
     let allDoorsActive = true;
-    doors.forEach(function(d) {
+    duplicated.doors.forEach(function(d) {
         if(!d.active) allDoorsActive = false;
     });
     
     if(allDoorsActive) {
-        youWin = true;
+        duplicated.youWin = true;
     }
 
-    if(!youWin) {
-        let milliSeconds = parseInt(frameNum*1000/60);
+    if(!duplicated.youWin) {
+        let milliSeconds = parseInt(duplicated.frameNum*1000/60);
         let seconds = parseInt(milliSeconds/1000);
         let mill = milliSeconds - 1000*seconds;
         $('#scoreBoard .time').html(seconds+'.'+mill);
@@ -169,12 +175,12 @@ function gameLoop() {
 function render() {
 
     //We draw the tiles
-    ctx.clearRect(0, 0, bw, bh);
-    ctx.fillStyle="#67B0CF";
-    ctx.fillRect(0,0,bw,bh);
-    if(mapData && mapData.tiles) {
-        mapData.tiles.forEach(elem => {
-            ctx.drawImage(tiles,elem.tileX*16,elem.tileY*16,16,16,elem.posX*16,elem.posY*16,16,16);
+    duplicated.ctx.clearRect(0, 0, duplicated.bw, duplicated.bh);
+    duplicated.ctx.fillStyle="#67B0CF";
+    duplicated.ctx.fillRect(0,0,duplicated.bw,duplicated.bh);
+    if(duplicated.mapData && duplicated.mapData.tiles) {
+        duplicated.mapData.tiles.forEach(elem => {
+            duplicated.ctx.drawImage(duplicated.assets.tiles,elem.tileX*16,elem.tileY*16,16,16,elem.posX*16,elem.posY*16,16,16);
         });
     }
 
@@ -182,20 +188,20 @@ function render() {
    
 
     //drawing doors
-    doors.forEach(function(d) {
+    duplicated.doors.forEach(function(d) {
         d.render();
     });
     //drawing gravity buttons
-    gravityButtons.forEach(function(g) {
+    duplicated.gravityButtons.forEach(function(g) {
         g.render();
     });
     //drawing players
-    players.forEach(function(p) {
+    duplicated.players.forEach(function(p) {
         p.render();
     });
 
      //You win board
-    if(youWin) ctx.drawImage(youWinBoard,0,0,300,250,(800-300)/2,0,300,250);
+    if(duplicated.youWin) duplicated.ctx.drawImage(duplicated.assets.youWinBoard,0,0,300,250,(800-300)/2,0,300,250);
 
 }
 
@@ -207,9 +213,9 @@ function render() {
 
 reloadMap = function() {
     
-    plats = [];
-    if(mapData.platforms) mapData.platforms.forEach(elem => {
-        plats.push(
+    duplicated.plats = [];
+    if(duplicated.mapData.platforms) duplicated.mapData.platforms.forEach(elem => {
+        duplicated.plats.push(
             {
             id:'test',
             type:'bg',
@@ -221,17 +227,17 @@ reloadMap = function() {
         );
     })
 
-    players = [];
-    if(mapData.players) mapData.players.forEach((elem,i) => {
-        players.push(new Player({context:ctx,image:playerImage,playerNum:i,x:elem.x,y:elem.y,reverseCommand:elem.reverseCommand}));
+    duplicated.players = [];
+    if(duplicated.mapData.players) duplicated.mapData.players.forEach((elem,i) => {
+        duplicated.players.push(new Player({context:duplicated.ctx,image:duplicated.assets.playerImage,playerNum:i,x:elem.x,y:elem.y,reverseCommand:elem.reverseCommand}));
     })
-    doors = [];
-    if(mapData.doors) mapData.doors.forEach((elem,i) => {
-       doors.push(new Door({context:ctx,image:doorsImage,doorNum:i,x:elem.x,y:elem.y,reversed:elem.reversed}));
+    duplicated.doors = [];
+    if(duplicated.mapData.doors) duplicated.mapData.doors.forEach((elem,i) => {
+       duplicated.doors.push(new Door({context:duplicated.ctx,image:duplicated.assets.doorsImage,doorNum:i,x:elem.x,y:elem.y,reversed:elem.reversed}));
     })
-    gravityButtons = [];
-    if(mapData.gravityButtons) mapData.gravityButtons.forEach((elem,i) => {
-       gravityButtons.push(new gravityButton({context:ctx,image:gravityButtonsImage,x:elem.x,y:elem.y,mode:elem.mode}));
+    duplicated.gravityButtons = [];
+    if(duplicated.mapData.gravityButtons) duplicated.mapData.gravityButtons.forEach((elem,i) => {
+       duplicated.gravityButtons.push(new gravityButton({context:duplicated.ctx,image:duplicated.assets.gravityButtonsImage,x:elem.x,y:elem.y,mode:elem.mode}));
     })
     gameLoop();
 }
@@ -240,7 +246,7 @@ reloadMap = function() {
 
 function viewReplay() {
     var zip = new JSZip();
-    zip.file("data.json", JSON.stringify(replayStore));
+    zip.file("data.json", JSON.stringify(duplicated.replayStore));
     zip.generateAsync({
         type:"string",
         compression: "DEFLATE",
@@ -251,53 +257,54 @@ function viewReplay() {
     .then(function(content) {
         var encodedReplay = Tools.encodeDataForURL(content);
 
-        var url = new URL(window.location.href);
+        const url = new URL(window.location.href);
         var data = url.searchParams.get("data");
-
-        window.open('index.html?replay='+encodedReplay+'&data='+data, '_blank');
+        let urlToRedirectTo = 'index.html?replay='+encodedReplay;
+        if(data != null && data.length > 0) urlToRedirectTo += '&data='+data;
+        window.open(urlToRedirectTo, '_blank');
     });
 }
 
 
 function keyDown(evt) {
 
-    if(doReplay) return;
+    if(duplicated.doReplay) return;
 
     switch(evt.keyCode) {
         //left
         case 37: //left arrow
         case 81: //Q
-            keysPressed.l = true;
+            duplicated.keysPressed.l = true;
             break;
         //up
         case 38: //up arrow
         case 32: //spacebar
-            keysPressed.u=true;
+            duplicated.keysPressed.u=true;
             break;
         //right
         case 39: //right arrow
         case 68: //D
-            keysPressed.r = true;
+            duplicated.keysPressed.r = true;
             break;
     }
 }
 function keyUp(evt) {
 
-    if(doReplay) return;
+    if(duplicated.doReplay) return;
 
 
     switch(evt.keyCode) {
         case 37: //left arrow
         case 81: //Q
-            keysPressed.l=false;
+            duplicated.keysPressed.l=false;
             break;
         case 38: //up arrow
         case 32: //spacebar
-            keysPressed.u=false;
+            duplicated.keysPressed.u=false;
             break;
         case 39: //right arrow
         case 68: //D
-            keysPressed.r=false;
+            duplicated.keysPressed.r=false;
             break;
     }
 }

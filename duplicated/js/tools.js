@@ -9,7 +9,7 @@ class Tools {
 	    if((player.x+player.bounding.w/2) < platform.x ) return [];
 		if((player.x-player.bounding.w/2) > (platform.x+platform.w) ) return [];
 
-	    if(grav > 0) {
+	    if(duplicated.grav > 0) {
 		    if((player.y-player.bounding.h) > (platform.y+platform.h) ) return [];
 		    if(player.y < platform.y) return [];
 
@@ -59,7 +59,7 @@ class Tools {
 	    let collidePixels = [];
 	    let spriteTop = sprite.y- sprite.bounding.h;
 	    let spriteBottom = sprite.y;
-	    if(grav > 0) {
+	    if(duplicated.grav > 0) {
 
 	    	//player under the sprite
 	    	if((player.y-player.bounding.h) > sprite.y ) return [];

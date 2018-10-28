@@ -1,32 +1,36 @@
+//namespace
+let duplicated = {};
+
 // game width
-const bw = 800;
+duplicated.bw = 800;
 // game height
-const bh = 592;
+duplicated.bh = 592;
 
 
 
 
-let tiles = new Image();
-tiles.src = "sprites/tileset_grassAndDirt.png";
+//assets 
+duplicated.assets = {};
+duplicated.assets.youWinBoard = new Image();
+duplicated.assets.youWinBoard.src = "sprites/youWinBoard.png";
+duplicated.assets.playerImage = new Image();
+duplicated.assets.playerImage.src = "sprites/player.png";
+duplicated.assets.doorsImage = new Image();
+duplicated.assets.doorsImage.src = "sprites/doors.png";
+duplicated.assets.tiles = new Image();
+duplicated.assets.tiles.src = "sprites/tileset_grassAndDirt.png";
+duplicated.assets.gravityButtonsImage = new Image();
+duplicated.assets.gravityButtonsImage.src = "sprites/gravity_button.png";
 
-let playerImage = new Image();
-playerImage.src = "sprites/player.png";
-
-let doorsImage = new Image();
-doorsImage.src = "sprites/doors.png";
-
-let gravityButtonsImage = new Image();
-gravityButtonsImage.src = "sprites/gravity_button.png";
-
-var isDragging = false;
+duplicated.isDragging = false;
 
 
-let mapData = {};
-mapData['tiles'] = [];
-mapData['platforms'] = [];
-mapData['players'] = [];
-mapData['doors'] = [];
-mapData['gravityButtons'] = [];
+duplicated.mapData = {};
+duplicated.mapData['tiles'] = [];
+duplicated.mapData['platforms'] = [];
+duplicated.mapData['players'] = [];
+duplicated.mapData['doors'] = [];
+duplicated.mapData['gravityButtons'] = [];
 
 
 //which mode currently in
@@ -35,25 +39,25 @@ mapData['gravityButtons'] = [];
 // playerPosition: set where player appears
 // doorPosition: set where door appears
 // gravityButtonPosition: set where gravity button displayed
-let mode = ''; 
+duplicated.mode = ''; 
 
 //tile mode
-let tileX = -1;
-let tileY = -1;
+duplicated.tileX = -1;
+duplicated.tileY = -1;
 //newPlatform mode
-let newPlatformIndex = -1;
+duplicated.newPlatformIndex = -1;
 //playerPosition mode
-let playerIndex = -1;
+duplicated.playerIndex = -1;
 //doorPosition mode
-let doorIndex = -1;
+duplicated.doorIndex = -1;
 //gravityButtonPosition
-let gravityButtonIndex = -1;
+duplicated.gravityButtonIndex = -1;
 
 window.onload = function() {
     canv=document.getElementById("gc");
-    ctx=canv.getContext("2d");
-    ctx.fillStyle="#67B0CF";
-	ctx.fillRect(0,0,bw,bh);
+    duplicated.ctx = canv.getContext("2d");
+    duplicated.ctx.fillStyle="#67B0CF";
+	duplicated.ctx.fillRect(0,0,duplicated.bw,duplicated.bh);
 
 
 //grid
@@ -79,18 +83,18 @@ window.onload = function() {
 		if($(this).hasClass('selected')) {
 			$('#instruction').html('');
 			$('.tile').removeClass('selected');
-			tileX = -1;
-			tileY = -1;
-			mode = '';
-			$('#mode').html(mode);
+			duplicated.tileX = -1;
+			duplicated.tileY = -1;
+			duplicated.mode = '';
+			$('#mode').html(duplicated.mode);
 			return;
 		}
-		mode = 'tile';
-		$('#mode').html(mode);
+		duplicated.mode = 'tile';
+		$('#mode').html(duplicated.mode);
 		$('.tile').removeClass('selected');
 		$(this).addClass('selected');
-		tileX = parseInt($(this).attr('x'));
-		tileY = parseInt($(this).attr('y'));
+		duplicated.tileX = parseInt($(this).attr('x'));
+		duplicated.tileY = parseInt($(this).attr('y'));
 	})
 
 	$('#gc').mousedown(function(evt) {
@@ -102,7 +106,7 @@ window.onload = function() {
 		switch (evt.which) {
 	        case 1:
 	        	//left button
-	            isDragging = true;
+	            duplicated.isDragging = true;
 	            break;
 	        case 2:
 	            //middle button
@@ -113,8 +117,8 @@ window.onload = function() {
 	        default:
 	            //strange mouse
 	    }
-	    if(mode == 'newPlatform') {
-	    	mapData['platforms'][newPlatformIndex] = {x:posX*16,y:posY*16,w:16,h:16};
+	    if(duplicated.mode == 'newPlatform') {
+	    	duplicated.mapData['platforms'][duplicated.newPlatformIndex] = {x:posX*16,y:posY*16,w:16,h:16};
 	    	reloadMap();
 	    }
 	})
@@ -132,45 +136,45 @@ window.onload = function() {
 		$('#posX').html(posX);
 		$('#posY').html(posY);
 
-		if(mode === 'tile') {
-		    if(!isDragging) return;
-		    if(tileX < 0 || tileY < 0) return;
+		if(duplicated.mode === 'tile') {
+		    if(!duplicated.isDragging) return;
+		    if(duplicated.tileX < 0 || duplicated.tileY < 0) return;
 
 			//We save the tile in the data
-			var index = mapData['tiles'].map(function(e) { return e.posX+'_'+e.posY; }).indexOf(posX+'_'+posY);
-			let payload = {'posX':posX,'posY':posY,'tileX':tileX,'tileY':tileY};
-			if(index >= 0) mapData['tiles'][index] = payload;
-			else mapData['tiles'].push(payload);
+			var index = duplicated.mapData['tiles'].map(function(e) { return e.posX+'_'+e.posY; }).indexOf(posX+'_'+posY);
+			let payload = {'posX':posX,'posY':posY,'tileX':duplicated.tileX,'tileY':duplicated.tileY};
+			if(index >= 0) duplicated.mapData['tiles'][index] = payload;
+			else duplicated.mapData['tiles'].push(payload);
 
 			//we redraw
 			reloadMap();
 		}
-		if(mode == 'newPlatform') {
-			if(!isDragging) return;
+		if(duplicated.mode == 'newPlatform') {
+			if(!duplicated.isDragging) return;
 
 			let pixelX = posX*16 + 16;
 			let pixelY = posY*16 + 16;
-			let width = pixelX - mapData['platforms'][newPlatformIndex].x;
-			let height = pixelY - mapData['platforms'][newPlatformIndex].y;
+			let width = pixelX - duplicated.mapData['platforms'][duplicated.newPlatformIndex].x;
+			let height = pixelY - duplicated.mapData['platforms'][duplicated.newPlatformIndex].y;
 
 			if(width <= 0) {
-				mapData['platforms'][newPlatformIndex].x = posX*16;
+				duplicated.mapData['platforms'][duplicated.newPlatformIndex].x = posX*16;
 				width = 16;
 			}
 			if(height <= 0) {
-				mapData['platforms'][newPlatformIndex].y = posY*16;
+				duplicated.mapData['platforms'][duplicated.newPlatformIndex].y = posY*16;
 				width = 16;
 			}
-			mapData['platforms'][newPlatformIndex].w = width;
-			mapData['platforms'][newPlatformIndex].h = height;
+			duplicated.mapData['platforms'][duplicated.newPlatformIndex].w = width;
+			duplicated.mapData['platforms'][duplicated.newPlatformIndex].h = height;
 			reloadMap();
 		}
-		if(mode == 'playerPosition') {
+		if(duplicated.mode == 'playerPosition') {
 			reloadMap();
-			ctx.drawImage(
-			    playerImage,
+			duplicated.ctx.drawImage(
+			    duplicated.assets.playerImage,
 			    6* 24,
-			    playerIndex*24,
+			    duplicated.playerIndex*24,
 			    24,
 			    24,
 			    tilePositionX-24/2,
@@ -180,15 +184,15 @@ window.onload = function() {
 		    );
 		}
 
-		if(mode == 'doorPosition') {
+		if(duplicated.mode == 'doorPosition') {
 			reloadMap();
-			let door = mapData['doors'][doorIndex];
+			let door = duplicated.mapData.doors[duplicated.doorIndex];
 
-			let doorSpriteY = doorIndex*48;
+			let doorSpriteY = duplicated.doorIndex*48;
 			if(door.reversed) doorSpriteY += 4*48;
 
-			ctx.drawImage(
-			    doorsImage,
+			duplicated.ctx.drawImage(
+			    duplicated.assets.doorsImage,
 			    0,
 			    doorSpriteY,
 			    48,
@@ -199,15 +203,15 @@ window.onload = function() {
 			    48
 		    );
 		}
-		if(mode == 'gravityButtonPosition') {
+		if(duplicated.mode == 'gravityButtonPosition') {
 			reloadMap();
-			let gravityButton = mapData['gravityButtons'][gravityButtonIndex];
+			let gravityButton = duplicated.mapData.gravityButtons[duplicated.gravityButtonIndex];
 
 			let gravityButtonSpriteY = 0;
 			if(gravityButton.mode == 'down') gravityButtonSpriteY += 32;
 
-			ctx.drawImage(
-			    gravityButtonsImage,
+			duplicated.ctx.drawImage(
+			    duplicated.assets.gravityButtonsImage,
 			    0,
 			    gravityButtonSpriteY,
 			    32,
@@ -220,71 +224,71 @@ window.onload = function() {
 		}
 	 })
 	.mouseup(function(evt) {
-	    isDragging = false;
+	    duplicated.isDragging = false;
 
 	    let posX = Math.floor(evt.offsetX/16);
 		let posY = Math.floor(evt.offsetY/16);
 		let tilePositionX = posX * 16;
 		let tilePositionY = posY* 16;
 
-	    if(mode === 'tile') {
+	    if(duplicated.mode === 'tile') {
 
 	    	//left click, we draw
 	    	if(evt.which == 1) {
-			    if(tileX < 0 || tileY < 0) return;
+			    if(duplicated.tileX < 0 || duplicated.tileY < 0) return;
 
 				//We save the tile in the data
-				var index = mapData['tiles'].map(function(e) { return e.posX+'_'+e.posY; }).indexOf(posX+'_'+posY);
-				let payload = {'posX':posX,'posY':posY,'tileX':tileX,'tileY':tileY};
-				if(index >= 0) mapData['tiles'][index] = payload;
-				else mapData['tiles'].push(payload);		
+				var index = duplicated.mapData['tiles'].map(function(e) { return e.posX+'_'+e.posY; }).indexOf(posX+'_'+posY);
+				let payload = {'posX':posX,'posY':posY,'tileX':duplicated.tileX,'tileY':duplicated.tileY};
+				if(index >= 0) duplicated.mapData['tiles'][index] = payload;
+				else duplicated.mapData['tiles'].push(payload);		
 			}
 			//right click, we delete
 			if(evt.which == 3) {
-				ctx.fillStyle="#67B0CF";
+				duplicated.ctx.fillStyle="#67B0CF";
 				
-				ctx.fillRect(tilePositionX,tilePositionY,16,16);
+				duplicated.ctx.fillRect(tilePositionX,tilePositionY,16,16);
 
-				var index = mapData['tiles'].map(function(e) { return e.posX+'_'+e.posY; }).indexOf(posX+'_'+posY);
-				if(index >= 0) mapData['tiles'].splice(index, 1);
+				var index = duplicated.mapData['tiles'].map(function(e) { return e.posX+'_'+e.posY; }).indexOf(posX+'_'+posY);
+				if(index >= 0) duplicated.mapData['tiles'].splice(index, 1);
 			}
 		}
-		if(mode == 'newPlatform') {
-			mode = '';
+		if(duplicated.mode == 'newPlatform') {
+			duplicated.mode = '';
 			$('#mode').html('');
 			$('#instruction').html('');
-			newPlatformIndex = -1;
+			duplicated.newPlatformIndex = -1;
 		}
-		if(mode == 'playerPosition') {
-			mapData.players[playerIndex].x = tilePositionX;
-			mapData.players[playerIndex].y= tilePositionY;
+		if(duplicated.mode == 'playerPosition') {
+			duplicated.mapData.players[duplicated.playerIndex].x = tilePositionX;
+			duplicated.mapData.players[duplicated.playerIndex].y= tilePositionY;
 			mode = '';
 			$('#mode').html('');
 			$('#instruction').html('');
-			playerIndex = -1;
+			duplicated.playerIndex = -1;
 		}
-		if(mode == 'doorPosition') {
-			mapData.doors[doorIndex].x = tilePositionX;
-			mapData.doors[doorIndex].y= tilePositionY;
-			mode = '';
+		if(duplicated.mode == 'doorPosition') {
+			duplicated.mapData.doors[duplicated.doorIndex].x = tilePositionX;
+			duplicated.mapData.doors[duplicated.doorIndex].y= tilePositionY;
+			duplicated.mode = '';
 			$('#mode').html('');
 			$('#instruction').html('');
-			doorIndex = -1;
+			duplicated.doorIndex = -1;
 		}
-		if(mode == 'gravityButtonPosition') {
-			mapData.gravityButtons[gravityButtonIndex].x = tilePositionX;
-			mapData.gravityButtons[gravityButtonIndex].y= tilePositionY;
-			mode = '';
+		if(duplicated.mode == 'gravityButtonPosition') {
+			duplicated.mapData.gravityButtons[duplicated.gravityButtonIndex].x = tilePositionX;
+			duplicated.mapData.gravityButtons[duplicated.gravityButtonIndex].y= tilePositionY;
+			duplicated.mode = '';
 			$('#mode').html('');
 			$('#instruction').html('');
-			gravityButtonIndex = -1;
+			duplicated.gravityButtonIndex = -1;
 		}
 		reloadMap();
 	});
 
 
 	$('body').mouseup(function() {
-	    isDragging = false;
+	    duplicated.isDragging = false;
 	})
 
 	
@@ -305,7 +309,7 @@ window.onload = function() {
 		let rawZip = Tools.decodeDataFromUrl(data);
 		zip.loadAsync(rawZip).then(function (read) {
 	        zip.file("data.json").async("string").then((data) => {
-	        	mapData = JSON.parse(data);
+	        	duplicated.mapData = JSON.parse(data);
 	        	reloadMap();
 	        })
 	    });
@@ -317,38 +321,36 @@ window.onload = function() {
 loadLayout = function() {
 	if($('#layoutLoader').val().length == 0) return;
 	$.getJSON( "layouts/"+$('#layoutLoader').val()+".json", function(data) {
-		mapData = data;
+		duplicated.mapData = data;
 		reloadMap();
 	})
 }
 reloadMap = function() {
-	canv=document.getElementById("gc");
-	ctx=canv.getContext("2d");
-	ctx.clearRect(0, 0, canv.width, canv.height);
-	ctx.fillStyle="#67B0CF";
-	ctx.fillRect(0,0,bw,bh);
-	mapData.tiles.forEach(elem => {
-		ctx.drawImage(tiles,elem.tileX*16,elem.tileY*16,16,16,elem.posX*16,elem.posY*16,16,16);
+	duplicated.ctx.clearRect(0, 0, canv.width, canv.height);
+	duplicated.ctx.fillStyle="#67B0CF";
+	duplicated.ctx.fillRect(0,0,duplicated.bw,duplicated.bh);
+	duplicated.mapData.tiles.forEach(elem => {
+		duplicated.ctx.drawImage(duplicated.assets.tiles,elem.tileX*16,elem.tileY*16,16,16,elem.posX*16,elem.posY*16,16,16);
 	})
 	
-	if(mapData.platforms) mapData.platforms.forEach((elem,i) => {
-		if(i == newPlatformIndex) {
-			ctx.strokeStyle = "#FF3333";
-			ctx.lineWidth = 3;
+	if(duplicated.mapData.platforms) duplicated.mapData.platforms.forEach((elem,i) => {
+		if(i == duplicated.newPlatformIndex) {
+			duplicated.ctx.strokeStyle = "#FF3333";
+			duplicated.ctx.lineWidth = 3;
 		} else {
-			ctx.strokeStyle = "#000000";
-			ctx.lineWidth = 1;
+			duplicated.ctx.strokeStyle = "#000000";
+			duplicated.ctx.lineWidth = 1;
 		}
-		ctx.beginPath();
-		ctx.rect(elem.x,elem.y,elem.w,elem.h);
-		ctx.stroke();
+		duplicated.ctx.beginPath();
+		duplicated.ctx.rect(elem.x,elem.y,elem.w,elem.h);
+		duplicated.ctx.stroke();
 	})
 
-	if(mapData.players) mapData.players.forEach((elem,i) => {
+	if(duplicated.mapData.players) duplicated.mapData.players.forEach((elem,i) => {
 
-		if(mode == 'playerPosition' && i == playerIndex) return;
-		ctx.drawImage(
-		    playerImage,
+		if(duplicated.mode == 'playerPosition' && i == duplicated.playerIndex) return;
+		duplicated.ctx.drawImage(
+		    duplicated.assets.playerImage,
 		    6* 24,
 		    i*24,
 		    24,
@@ -359,13 +361,13 @@ reloadMap = function() {
 		    24
 	    );
 	})
-	if(mapData.doors) mapData.doors.forEach((elem,i) => {
+	if(duplicated.mapData.doors) duplicated.mapData.doors.forEach((elem,i) => {
 
-		if(mode == 'doorPosition' && i == doorIndex) return;
+		if(duplicated.mode == 'doorPosition' && i == duplicated.doorIndex) return;
 		let doorSpriteY = i*48;
 		if(elem.reversed) doorSpriteY += 4*48;
-		ctx.drawImage(
-		    doorsImage,
+		duplicated.ctx.drawImage(
+		    duplicated.assets.doorsImage,
 		    0,
 		    doorSpriteY,
 		    48,
@@ -378,13 +380,13 @@ reloadMap = function() {
 	})
 
 
-	if(mapData.gravityButtons)  mapData.gravityButtons.forEach((elem,i) => {
+	if(duplicated.mapData.gravityButtons)  duplicated.mapData.gravityButtons.forEach((elem,i) => {
 
-		if(mode == 'gravityButtonPosition' && i == gravityButtonIndex) return;
+		if(duplicated.mode == 'gravityButtonPosition' && i == duplicated.gravityButtonIndex) return;
 		let gravityButtonSpriteY = 0;
 		if(elem.mode == 'down') gravityButtonSpriteY += 32;
-		ctx.drawImage(
-		    gravityButtonsImage,
+		duplicated.ctx.drawImage(
+		    duplicated.assets.gravityButtonsImage,
 		    0,
 		    gravityButtonSpriteY,
 		    32,
@@ -401,94 +403,95 @@ reloadMap = function() {
 
 reloadTools = function() {
 	$('#platformsList').html('');
-	if(mapData.platforms) mapData.platforms.forEach((elem,i) => {
+	if(duplicated.mapData.platforms) duplicated.mapData.platforms.forEach((elem,i) => {
 		$('#platformsList').append('<li index="'+i+'"><span class="eye" index="'+i+'"></span>x:'+elem.x+' y:'+elem.y+' w:'+elem.w+' h:'+elem.h+'<button class="removePlatform" onclick="deletePlatform('+i+')">-</button></li>');
 	})
 
 	$('#playersList').html('');
-	if(mapData.players) mapData.players.forEach((elem,i) => {
+	if(duplicated.mapData.players) duplicated.mapData.players.forEach((elem,i) => {
 		let checked="";
 		if(elem.reverseCommand) checked = ' checked';
 
 		let selected="";
-		if(playerIndex == i) selected = ' selected';
+		if(duplicated.playerIndex == i) selected = ' selected';
 		$('#playersList').append('<li class="player'+i+selected+'"><span class="image" onclick="selectPlayer('+i+')"></span>rev commands:<input type="checkbox" '+checked+' onclick="reverseCommand('+i+')"></input><button onclick="deletePlayer('+i+')">-</button></span></li>');
 	})
 
 	$('#doorsList').html('');
-	if(mapData.doors) mapData.doors.forEach((elem,i) => {
+	if(duplicated.mapData.doors) duplicated.mapData.doors.forEach((elem,i) => {
 		let checked="";
 		if(elem.reversed) checked = ' checked';
 
 		let selected="";
-		if(doorIndex == i) selected = ' selected';
+		if(duplicated.doorIndex == i) selected = ' selected';
 		$('#doorsList').append('<li class="door'+i+selected+'"><span class="image" onclick="selectDoor('+i+')"></span>reversed:<input type="checkbox" '+checked+' onclick="reverseDoor('+i+')"></input></li>');
 	})
 
 	$('#gravityButtonsList').html('');
-	if(mapData.gravityButtons) mapData.gravityButtons.forEach((elem,i) => {
-		let mode=' down';
-		if(elem.mode == 'up') mode = ' up';
+	if(duplicated.mapData.gravityButtons) duplicated.mapData.gravityButtons.forEach((elem,i) => {
+		let modeGravity=' down';
+		if(elem.mode == 'up') modeGravity = ' up';
 
 		let selected="";
-		if(gravityButtonIndex == i) selected = ' selected';
+		if(duplicated.gravityButtonIndex == i) selected = ' selected';
 
-		$('#gravityButtonsList').append('<li class="gravityButton'+i+selected+mode+'"><span class="image" onclick="selectGravityButton('+i+')"></span><button onclick="deleteGravityButton('+i+')">-</button></li>');
+		$('#gravityButtonsList').append('<li class="gravityButton'+i+selected+modeGravity+'"><span class="image" onclick="selectGravityButton('+i+')"></span><button onclick="deleteGravityButton('+i+')">-</button></li>');
 	})
 }
 
 
 addPlatform = function() {
-	mode = 'newPlatform';
-	$('#mode').html(mode);
+	duplicated.mode = 'newPlatform';
+	$('#mode').html(duplicated.mode);
 	$('#instruction').html('click and drag on the map to draw the platform');
-	mapData['platforms'].push({x:0,y:0,w:0,h:0});
-	newPlatformIndex = mapData['platforms'].length - 1;
+	duplicated.mapData['platforms'].push({x:0,y:0,w:0,h:0});
+	duplicated.newPlatformIndex = duplicated.mapData['platforms'].length - 1;
 }
 
 deletePlatform = function(index) {
 	console.log('deleting platform');
-	mapData.platforms.splice(index,1);
+	duplicated.mapData.platforms.splice(index,1);
 	reloadMap();
 }
 
 deletePlayer = function(index) {
-	mapData.platforms.splice(index,1);
+	duplicated.mapData.platforms.splice(index,1);
 	reloadMap();
 }
 
 addPlayer = function() {
-	if(!mapData.players) mapData.players = [];
-	if(!mapData.doors) mapData.doors = [];
-	if(mapData.players.length ==4) return;
+	if(!duplicated.mapData.players) duplicated.mapData.players = [];
+	if(!duplicated.mapData.doors) duplicated.mapData.doors = [];
+	//max number of players
+	if(duplicated.mapData.players.length == 4) return;
 
-	mapData.players.push({x:-100,y:-100,reverseCommand:false});
-	mapData.doors.push({x:-100,y:-100,reversed:false});
+	duplicated.mapData.players.push({x:-100,y:-100,reverseCommand:false});
+	duplicated.mapData.doors.push({x:-100,y:-100,reversed:false});
 
-	mode = 'playerPosition';
-	$('#mode').html(mode);
+	duplicated.mode = 'playerPosition';
+	$('#mode').html(duplicated.mode);
 	$('#instruction').html('click on the map to select where player spawn');
-	playerIndex = mapData.players.length - 1;
+	duplicated.playerIndex = duplicated.mapData.players.length - 1;
 	reloadMap();
 }
 selectPlayer = function(index) {
-	mode = 'playerPosition';
-	$('#mode').html(mode);
+	duplicated.mode = 'playerPosition';
+	$('#mode').html(duplicated.mode);
 	$('#instruction').html('click on the map to select where player spawn');
-	playerIndex = index;
+	duplicated.playerIndex = index;
 	reloadMap();
 }
 deletePlayer = function(index) {
-	mapData.players.splice(index,1);
-	if(mapData.doors) mapData.doors.splice(index,1);
+	duplicated.mapData.players.splice(index,1);
+	if(duplicated.mapData.doors) duplicated.mapData.doors.splice(index,1);
 	reloadMap();
 }
 
 selectDoor = function(index) {
-	mode = 'doorPosition';
-	$('#mode').html(mode);
+	duplicated.mode = 'doorPosition';
+	$('#mode').html(duplicated.mode);
 	$('#instruction').html('click on the map to select where door appears');
-	doorIndex = index;
+	duplicated.doorIndex = index;
 	reloadMap();
 }
 
@@ -496,27 +499,27 @@ selectDoor = function(index) {
 
 reverseCommand = function(index) {
 	let checked = $('.player'+index+' [type="checkbox"]').prop('checked');
-	mapData.players[index].reverseCommand = checked;
+	duplicated.mapData.players[index].reverseCommand = checked;
 }
 
 reverseDoor = function(index) {
 	let checked = $('.door'+index+' [type="checkbox"]').prop('checked');
-	mapData.doors[index].reversed = checked;
+	duplicated.mapData.doors[index].reversed = checked;
 	reloadMap();
 }
 
 
 addGravityButton = function(mode) {
-	if(!mapData['gravityButtons']) mapData['gravityButtons'] = [];
-	mapData['gravityButtons'].push({x:-100,y:-100,mode:mode});
+	if(!duplicated.mapData['gravityButtons']) duplicated.mapData.gravityButtons = [];
+	duplicated.mapData.gravityButtons.push({x:-100,y:-100,mode:mode});
 	reloadMap();
 }
 
 selectGravityButton = function(index) {
-	mode = 'gravityButtonPosition';
-	$('#mode').html(mode);
+	duplicated.mode = 'gravityButtonPosition';
+	$('#mode').html(duplicated.mode);
 	$('#instruction').html('click on the map to select where gravity button is displayed');
-	gravityButtonIndex = index;
+	duplicated.gravityButtonIndex = index;
 	reloadMap();
 }
 
@@ -524,7 +527,7 @@ selectGravityButton = function(index) {
 
 
 $(document).on('mouseover','.eye',function() {
-	newPlatformIndex = parseInt($(this).attr('index'));
+	duplicated.newPlatformIndex = parseInt($(this).attr('index'));
 	reloadMap();
 })
 
@@ -532,7 +535,7 @@ $(document).on('mouseover','.eye',function() {
 testLevel = function() {
 	$('#instruction').html('You may need to allow pop up windows');
 	var zip = new JSZip();
-	zip.file("data.json", JSON.stringify(mapData));
+	zip.file("data.json", JSON.stringify(duplicated.mapData));
 	zip.generateAsync({
 		type:"string",
 		compression: "DEFLATE",
@@ -542,7 +545,6 @@ testLevel = function() {
 	})
 	.then(function(content) {
 		var encodedData = Tools.encodeDataForURL(content);
-		console.log(encodedData);
 		window.open('index.html?data='+encodedData, '_blank');
 	});
 }
