@@ -114,12 +114,13 @@ class Player {
 	    if(duplicated.grav < 0 && this.speed.y < -15 ) this.speed.y = -15;
 
 	    //we don t exit
-	    if(this.x < 0) this.x = 16;
-	    if(this.x > duplicated.bw) this.x = duplicated.bw-16;
+	    if(this.x < 0) duplicated.youDead = true;
+	    if(this.x > duplicated.bw) duplicated.youDead = true;
 
-	    if(this.y < 0) this.y = 16;
-	    if(this.y > duplicated.bh) this.y = duplicated.bh-16;
+	    if(this.y < 0) duplicated.youDead = true;
+	    if(this.y > duplicated.bh) duplicated.youDead = true;
 
+	    console.log('dead?',duplicated.youDead);
 
 	    //We round to the nearest pixel
 		this.x = Math.round(this.x);
@@ -130,7 +131,7 @@ class Player {
 		let wasOnGround = this.onGround;
 		this.onGround=false;
 
-	    duplicated.platforms.forEach(plat => {
+	    duplicated.mapData.platforms.forEach(plat => {
 
 	        let coll = Tools.detectPlatformCollision(this,plat);
 	        if(coll.length === 0) return;

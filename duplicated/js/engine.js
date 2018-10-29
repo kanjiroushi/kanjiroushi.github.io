@@ -30,6 +30,8 @@ duplicated.doReplay = false;
 duplicated.assets = {};
 duplicated.assets.youWinBoard = new Image();
 duplicated.assets.youWinBoard.src = "sprites/youWinBoard.png";
+duplicated.assets.youDeadBoard = new Image();
+duplicated.assets.youDeadBoard.src = "sprites/youDeadBoard.png";
 duplicated.assets.playerImage = new Image();
 duplicated.assets.playerImage.src = "sprites/player.png";
 duplicated.assets.doorsImage = new Image();
@@ -40,6 +42,7 @@ duplicated.assets.gravityButtonsImage = new Image();
 duplicated.assets.gravityButtonsImage.src = "sprites/gravity_button.png";
 
 duplicated.youWin = false;
+duplicated.youDead = false;
 
 duplicated.mapData = {};
 duplicated.mapData['tiles'] = [];
@@ -117,7 +120,7 @@ window.onload=function() {
 
 //gameLoop the page
 function gameLoop() {
-    if(!duplicated.youWin) {
+    if(!duplicated.youWin && !duplicated.youDead) {
         
         
         if(duplicated.doReplay) {
@@ -140,7 +143,7 @@ function gameLoop() {
         duplicated.gravityButtons.forEach(function(g) {
             g.update(); 
         });
-    } else {
+    } else if(duplicated.youWin) {
         if(!duplicated.doReplay) $('.viewReplay').css('display','inline-block');
     }
     render();
@@ -202,7 +205,7 @@ function render() {
 
      //You win board
     if(duplicated.youWin) duplicated.ctx.drawImage(duplicated.assets.youWinBoard,0,0,300,250,(800-300)/2,0,300,250);
-
+    if(duplicated.youDead) duplicated.ctx.drawImage(duplicated.assets.youDeadBoard,0,0,300,250,(800-300)/2,0,300,250);
 }
 
 
