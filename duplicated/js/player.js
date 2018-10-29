@@ -57,7 +57,7 @@ class Player {
 
 
 
-	update(keysPressed,platforms,players) {
+	update() {
 
 		let prevX = this.x;
 		let prevY = this.y;
@@ -77,24 +77,24 @@ class Player {
 	    //modification of position
 	    //si on se déplace à gauche ou à droite on change la vitesse
 
-	    if(keysPressed.u && this.onGround) {
+	    if(duplicated.keysPressed.u && this.onGround) {
 	        if(duplicated.grav > 0) this.speed.y = -10;
 	        else this.speed.y = 10; 
 	    }
 	    //stop pressing, we set the y speed
-	    if(duplicated.grav > 0 && !keysPressed.u && this.speed.y<-3) {
+	    if(duplicated.grav > 0 && !duplicated.keysPressed.u && this.speed.y<-3) {
 	        this.speed.y=-3;
 	    }
-	    if(duplicated.grav < 0 && !keysPressed.u && this.speed.y>3) {
+	    if(duplicated.grav < 0 && !duplicated.keysPressed.u && this.speed.y>3) {
 	        this.speed.y=3;
 	    }
 
 
-	    if(keysPressed.l) {
+	    if(duplicated.keysPressed.l) {
 	        if(this.reverseCommand) this.speed.x=2;
 	    	else this.speed.x=-2;
 	    }
-	    if(keysPressed.r) {
+	    if(duplicated.keysPressed.r) {
 	        if(this.reverseCommand) this.speed.x=-2;
 	    	else this.speed.x=2; 
 	    }
@@ -130,7 +130,7 @@ class Player {
 		let wasOnGround = this.onGround;
 		this.onGround=false;
 
-	    platforms.forEach(plat => {
+	    duplicated.platforms.forEach(plat => {
 
 	        let coll = Tools.detectPlatformCollision(this,plat);
 	        if(coll.length === 0) return;
@@ -216,7 +216,7 @@ class Player {
 
 
 	    //We detect the collision with other players
-	    players.forEach(p => {
+	    duplicated.players.forEach(p => {
 	    	if(p.playerNum == this.playerNum) return;
 	    	let coll = Tools.detectSpriteCollision(this,p);
 	    	

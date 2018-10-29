@@ -132,13 +132,13 @@ function gameLoop() {
 
 
         duplicated.players.forEach(function(p) {
-            p.update(duplicated.keysPressed,duplicated.plats,duplicated.players); 
+            p.update(); 
         });
         duplicated.doors.forEach(function(d) {
-            d.update(duplicated.players); 
+            d.update(); 
         });
         duplicated.gravityButtons.forEach(function(g) {
-            g.update(duplicated.players,duplicated.gravityButtons); 
+            g.update(); 
         });
     } else {
         if(!duplicated.doReplay) $('.viewReplay').css('display','inline-block');

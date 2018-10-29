@@ -43,17 +43,17 @@ class gravityButton {
 	} //end constructor
 
 
-	update(players,gravityButtons) {
+	update() {
 		if(!this.pressed) {
 			var self = this;
-			players.forEach(function(player) {
+			duplicated.players.forEach(function(player) {
 				var coll = Tools.detectSpriteCollision(player,self);
 				if(coll.length > 0) {
 					self.doPress(true);
 					
 					if(self.mode == 'up') grav = -0.5;
 					else grav = 0.5;
-					gravityButtons.forEach(function(g) {
+					duplicated.gravityButtons.forEach(function(g) {
 						if(self.mode  == g.mode) g.doPress(true);
 						else g.doPress(false);
 					})
