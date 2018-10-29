@@ -548,3 +548,9 @@ testLevel = function() {
 		window.open('index.html?data='+encodedData, '_blank');
 	});
 }
+
+
+$('#tools .box').on('click',function() {
+	$('#tools .box').removeClass('active');
+	$(this).addClass('active');
+})

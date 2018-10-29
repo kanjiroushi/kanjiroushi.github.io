@@ -271,3 +271,22 @@ border-color:#EAEAEA;
 #tools #gravityButtonsList .selected .image{border-color:#33CCCC;}
 #tools #gravityButtonsList .up .image{background-position:0px 0px;}
 #tools #gravityButtonsList .down .image{background-position:0px -32px;}
+
+
+
+
+#tools .box h2{
+font-size:12px;
+border:1px #333 solid;
+padding:3px 10px;
+cursor:pointer;
+}
+#tools .box .content{
+display:none;
+}
+
+#tools .box.active .content{
+height:390px;
+display:block;
+overflow-y: auto;
+}

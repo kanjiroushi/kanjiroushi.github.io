@@ -12,73 +12,98 @@
         <canvas id="gc" width="800" height="592"></canvas>
         <div id="tools">
           <button onclick="testLevel()">Test Level</button>
-          <h2>Load Layout</h2>
-          <select id="layoutLoader" onchange="loadLayout()">
-            <option value="">Please select...</option>
-            <option value="onewindow">One window</option>
-            <option value="twowindowshorizontal">Two windows horizontal</option>
-            <option value="twowindowsvertical">Two windows vertical</option>
-            <option value="fourwindows">Four windows</option>
-          </select>
-          <h2>Players</h2>
-          <button onclick="addPlayer()">Add</button>
-          <ul id="playersList">
-          </ul>
+          
+          <div class="box active">
+            <h2>Load Layout</h2>
+            <div class="content">
+              <select id="layoutLoader" onchange="loadLayout()">
+                <option value="">Please select...</option>
+                <option value="onewindow">One window</option>
+                <option value="twowindowshorizontal">Two windows horizontal</option>
+                <option value="twowindowsvertical">Two windows vertical</option>
+                <option value="fourwindows">Four windows</option>
+              </select>
+            </div>
+          </div>
 
-          <h2>Doors</h2>
-          <ul id="doorsList">
-          </ul>
+          <div class="box">
+            <h2>Players</h2>
+            <div class="content">
+              <button onclick="addPlayer()">Add</button>
+              <ul id="playersList">
+              </ul>
+            </div>
+          </div>
 
-          <h2>Gravity buttons</h2>
-          <button onclick="addGravityButton('down')">Add down</button>
-          <button onclick="addGravityButton('up')">Add Up</button>
-          <ul id="gravityButtonsList">
-          </ul>
+          <div class="box">
+            <h2>Doors</h2>
+            <div class="content">
+              <ul id="doorsList">
+              </ul>
+            </div>
+          </div>
 
-          <h2>Platforms</h2>
-          <button onclick="addPlatform()">Add</button>
-          <ul id="platformsList">
-          </ul>
+          <div class="box">
+            <h2>Gravity buttons</h2>
+            <div class="content">
+              <button onclick="addGravityButton('down')">Add down</button>
+              <button onclick="addGravityButton('up')">Add Up</button>
+              <ul id="gravityButtonsList">
+              </ul>
+            </div>
+          </div>
+
+
+          <div class="box">
+            <h2>Platforms</h2>
+            <div class="content">
+              <button onclick="addPlatform()">Add</button>
+              <ul id="platformsList">
+              </ul>
+            </div>
+          </div>
           
 
-          <h2>TileSet</h2>
-
-
-
-          <div class="tile tile0_0" x="0" y="0"></div>
-          <div class="tile tile1_0" x="1" y="0"></div>
-          <div class="tile tile2_0" x="2" y="0"></div>
-          <div class="tile tile3_0" x="3" y="0"></div>
-          <div class="tile tile4_0" x="4" y="0"></div>
-          <div class="tile tile5_0" x="5" y="0"></div>
-          <div class="tile tile6_0" x="6" y="0"></div>
-          <div class="tile tile7_0" x="7" y="0"></div>
-          <div class="tile tile0_1" x="0" y="1"></div>
-          <div class="tile tile1_1" x="1" y="1"></div>
-          <div class="tile tile2_1" x="2" y="1"></div>
-          <div class="tile tile3_1" x="3" y="1"></div>
-          <div class="tile tile4_1" x="4" y="1"></div>
-          <div class="tile tile5_1" x="5" y="1"></div>
-          <div class="tile tile6_1" x="6" y="1"></div>
-          <div class="tile tile7_1" x="7" y="1"></div>
-          <div class="tile tile0_2" x="0" y="2"></div>
-          <div class="tile tile1_2" x="1" y="2"></div>
-          <div class="tile tile2_2" x="2" y="2"></div>
-          <div class="tile tile3_2" x="3" y="2"></div>
-          <div class="tile tile4_2" x="4" y="2"></div>
-          <div class="tile tile5_2" x="5" y="2"></div>
-          <div class="tile tile6_2" x="6" y="2"></div>
-          <div class="tile tile0_3" x="0" y="3"></div>
-          <div class="tile tile1_3" x="1" y="3"></div>
-          <div class="tile tile2_3" x="2" y="3"></div>
-          <div class="tile tile3_3" x="3" y="3"></div>
-          <div class="tile tile4_3" x="4" y="3"></div>
-          <div class="tile tile5_3" x="5" y="3"></div>
-          <div class="tile tile6_3" x="6" y="3"></div>
-          <div class="tile tile7_3" x="7" y="3"></div>
-
+          <div class="box">
+            <h2>TileSet</h2>
+            <div class="content">
+              <div class="tile tile0_0" x="0" y="0"></div>
+              <div class="tile tile1_0" x="1" y="0"></div>
+              <div class="tile tile2_0" x="2" y="0"></div>
+              <div class="tile tile3_0" x="3" y="0"></div>
+              <div class="tile tile4_0" x="4" y="0"></div>
+              <div class="tile tile5_0" x="5" y="0"></div>
+              <div class="tile tile6_0" x="6" y="0"></div>
+              <div class="tile tile7_0" x="7" y="0"></div>
+              <div class="tile tile0_1" x="0" y="1"></div>
+              <div class="tile tile1_1" x="1" y="1"></div>
+              <div class="tile tile2_1" x="2" y="1"></div>
+              <div class="tile tile3_1" x="3" y="1"></div>
+              <div class="tile tile4_1" x="4" y="1"></div>
+              <div class="tile tile5_1" x="5" y="1"></div>
+              <div class="tile tile6_1" x="6" y="1"></div>
+              <div class="tile tile7_1" x="7" y="1"></div>
+              <div class="tile tile0_2" x="0" y="2"></div>
+              <div class="tile tile1_2" x="1" y="2"></div>
+              <div class="tile tile2_2" x="2" y="2"></div>
+              <div class="tile tile3_2" x="3" y="2"></div>
+              <div class="tile tile4_2" x="4" y="2"></div>
+              <div class="tile tile5_2" x="5" y="2"></div>
+              <div class="tile tile6_2" x="6" y="2"></div>
+              <div class="tile tile0_3" x="0" y="3"></div>
+              <div class="tile tile1_3" x="1" y="3"></div>
+              <div class="tile tile2_3" x="2" y="3"></div>
+              <div class="tile tile3_3" x="3" y="3"></div>
+              <div class="tile tile4_3" x="4" y="3"></div>
+              <div class="tile tile5_3" x="5" y="3"></div>
+              <div class="tile tile6_3" x="6" y="3"></div>
+              <div class="tile tile7_3" x="7" y="3"></div>
+            </div>
+          </div>
 
         </div> <!-- end #tools -->
+
+
         <div id="position">
           X:<span id="canvasX">0</span> Y:<span id="canvasY">0</span>
           posX:<span id="posX">0</span> posY:<span id="posY">0</span>
