@@ -1,6 +1,41 @@
 class Tools {
 
+	static getPlayerPoint(player,point) {
 
+		if(duplicated.grav > 0) {
+			switch (point) {
+			  case 'bottomRight':
+			    return {id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y};
+			  case 'bottomLeft':
+			    return {id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y};
+			  case 'middleRight':
+			    return {id:'middleRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h/2};
+			  case 'middleLeft':
+			    return {id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h/2};
+			  case 'topRight':
+			    return {id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h};
+			  case 'topLeft':
+			    return {id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h};
+
+			}
+		} else {
+			switch (point) {
+			  case 'bottomRight':
+			    return {id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y-player.h};
+			  case 'bottomLeft':
+			    return {id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y-player.h};
+			  case 'middleRight':
+			    return {id:'middleRight',x:player.x+player.bounding.w/2,y:player.y-player.h+player.bounding.h/2};
+			  case 'middleLeft':
+			    return {id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.h+player.bounding.h/2};
+			  case 'topRight':
+			    return {id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.h+player.bounding.h};
+			  case 'topLeft':
+			    return {id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.h+player.bounding.h};
+
+			}
+		}
+	}
 	static detectPlatformCollision(player,platform) {
 
 		let collidePixels = [];
@@ -12,27 +47,20 @@ class Tools {
 	    if(duplicated.grav > 0) {
 		    if((player.y-player.bounding.h) > (platform.y+platform.h) ) return [];
 		    if(player.y < platform.y) return [];
-
-
-		    //We check for the 6 pixels if they collide
-		    collidePixels.push({id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y});
-		    collidePixels.push({id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y});
-		    collidePixels.push({id:'middleRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h/2});
-		    collidePixels.push({id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h/2});
-		    collidePixels.push({id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.bounding.h});
-		    collidePixels.push({id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.bounding.h});
 	    } else {
 		    if((player.y-player.h+player.bounding.h) < platform.y ) return [];
 		    if((player.y-player.h) > (platform.y+platform.h)) return [];
+		}
 
-		    //We check for the 6 pixels if they collide
-		    collidePixels.push({id:'bottomRight',x:player.x+player.bounding.w/2,y:player.y-player.h});
-		    collidePixels.push({id:'bottomLeft',x:player.x-player.bounding.w/2,y:player.y-player.h});
-		    collidePixels.push({id:'middleRight',x:player.x+player.bounding.w/2,y:player.y-player.h+player.bounding.h/2});
-		    collidePixels.push({id:'middleLeft',x:player.x-player.bounding.w/2,y:player.y-player.h+player.bounding.h/2});
-		    collidePixels.push({id:'topRight',x:player.x+player.bounding.w/2,y:player.y-player.h+player.bounding.h});
-		    collidePixels.push({id:'topLeft',x:player.x-player.bounding.w/2,y:player.y-player.h+player.bounding.h});
-	    }
+    	//We check for the 6 pixels if they collide
+	    collidePixels.push(Tools.getPlayerPoint(player,'bottomRight'));
+	    collidePixels.push(Tools.getPlayerPoint(player,'bottomLeft'));
+	    collidePixels.push(Tools.getPlayerPoint(player,'middleRight'));
+	    collidePixels.push(Tools.getPlayerPoint(player,'middleLeft'));
+	    collidePixels.push(Tools.getPlayerPoint(player,'topRight'));
+	    collidePixels.push(Tools.getPlayerPoint(player,'topLeft'));
+
+
 	    let colliding = [];
 
 	    collidePixels.forEach(function(pix) {

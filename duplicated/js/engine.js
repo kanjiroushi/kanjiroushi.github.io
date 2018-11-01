@@ -220,8 +220,6 @@ reloadMap = function() {
     if(duplicated.mapData.platforms) duplicated.mapData.platforms.forEach(elem => {
         duplicated.plats.push(
             {
-            id:'test',
-            type:'bg',
             x:elem.x,
             y:elem.y,
             w:elem.w,

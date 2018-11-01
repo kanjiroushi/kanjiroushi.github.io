@@ -153,6 +153,23 @@ class Player {
 	        
 	        //on the ground
 	        if(coll.includes('bottomRight') && coll.includes('bottomLeft')) {
+
+	        	//we check if the platform is a deadly one
+	        	//console.log(plat);
+	        	let pos = Tools.getPlayerPoint(this,'bottomLeft');
+
+	        	let posX = Math.floor(pos.x/16);
+				let posY = Math.floor(pos.y/16);
+
+	        	let tile = duplicated.mapData.tiles.filter(t => t.posX == posX &&  t.posY == posY)[0];
+
+	        	//Currently 2 tiles with spikes
+	        	if(tile.tileX == 7 && (tile.tileY == 2 || tile.tileY == 5)) {
+	        		duplicated.youDead = true;
+	        		return;
+	        	}
+	        	
+
 //	        	console.log('on the ground');
 	        	//looking down
 	        	if(duplicated.grav > 0) {
@@ -162,7 +179,7 @@ class Player {
 		            this.speed.y = 0;
 		            return;
 	            } else {
-	            	this.y=plat.y+plat.h+this.h;
+	            	this.y=plat.y+plat.h+this.h-1;
 		            this.onGround=true;
 		            this.onGroundPlatform=plat.id;
 		            this.speed.y = 0;
