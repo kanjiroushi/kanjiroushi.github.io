@@ -51,7 +51,7 @@ class gravityButton {
 				if(coll.length > 0) {
 					self.doPress(true);
 					
-					if(self.mode == 'up') grav = -0.5;
+					if(self.mode == 'up') duplicated.grav = -0.5;
 					else grav = 0.5;
 					duplicated.gravityButtons.forEach(function(g) {
 						if(self.mode  == g.mode) g.doPress(true);

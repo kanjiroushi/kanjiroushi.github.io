@@ -23,6 +23,9 @@ class Player {
 	    this.y = options.y || 200;
 
 
+	    //keep direction for idle sprite
+	    this.direction = 'right';
+
 	    this.spriteX = this.playerNum * 24;
 	    //We can reverse the left and right commands
 	    if(options.reverseCommand) this.reverseCommand = true;
@@ -91,19 +94,31 @@ class Player {
 
 
 	    if(duplicated.keysPressed.l) {
-	        if(this.reverseCommand) this.speed.x=2;
-	    	else this.speed.x=-2;
+	        if(this.reverseCommand) {
+	        	this.speed.x=2;
+	        	this.direction = 'right';
+	    	} else {
+	    		this.speed.x=-2;
+	    		this.direction = 'left';
+	    	}
 	    }
 	    if(duplicated.keysPressed.r) {
-	        if(this.reverseCommand) this.speed.x=-2;
-	    	else this.speed.x=2; 
+	        if(this.reverseCommand) {
+	        	this.speed.x=-2;
+	        	this.direction = 'left';
+	    	} else {
+	    		this.speed.x=2; 
+	    		this.direction = 'right';
+	    	}
 	    }
+
 	    //on update la position du joueur avec la vitesse
 	    this.x+=this.speed.x;
 	    this.y+=this.speed.y;
 	    //si au sol on applique un coef de friction
 	    if(this.onGround) {
-	        this.speed.x *= 0.3;
+	        this.speed.x *= 0.1;
+	        if(Math.abs(this.speed.x) < 0.01) this.speed.x = 0;
 	    } else {
 	        this.speed.y += duplicated.grav;
 	    }
@@ -120,7 +135,6 @@ class Player {
 	    if(this.y < 0) duplicated.youDead = true;
 	    if(this.y > duplicated.bh) duplicated.youDead = true;
 
-	    console.log('dead?',duplicated.youDead);
 
 	    //We round to the nearest pixel
 		this.x = Math.round(this.x);
@@ -188,7 +202,6 @@ class Player {
 	        		this.y=plat.y;
 	        		//if it comes from the top we allow to stay on the platform
 	        		if(prevY < this.y) {
-	        			console.log('we kill the speed');
 	        			this.speed.y = 0;
 	            	}
 	            } else {
@@ -267,7 +280,7 @@ class Player {
 		if(this.onGround && Math.abs(this.speed.x) <0.1) {
 			//idle
 			this.frameIndex = 6;
-			
+			if(this.direction == 'left') reverseSprite = 9;
 			this.context.drawImage(
 			    this.image,
 			    (this.frameIndex+reverseSprite)* this.w,

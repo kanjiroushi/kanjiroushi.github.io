@@ -85,8 +85,7 @@ user-select: none;
 
 #tools{
 display:inline-block;
-width:230px;
-padding:0 10px;
+width:250px;
 float:right;
 background-color:#EAEAEA;
 min-height:592px;
@@ -282,11 +281,15 @@ padding:3px 10px;
 cursor:pointer;
 }
 #tools .box .content{
-display:none;
+height:0;
+overflow: hidden;
+transition: 0.5s;
+transition-timing-function: ease-in-out;
 }
 
 #tools .box.active .content{
 height:390px;
-display:block;
 overflow-y: auto;
+transition: 0.5s;
+transition-timing-function: ease-in-out;
 }
